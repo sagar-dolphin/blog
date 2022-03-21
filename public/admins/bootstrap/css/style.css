@@ -1,0 +1,28 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
+.bg-pink {
+    background-color: #FEC0FF !important;
+}
+.btn-light {
+    background-color: #fff !important;
+    color: #FEC0FF !important;
+}
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #FEC0FF !important;
+    font-weight: 900;
+    background-color: #fff;
+}
+a {
+    color: white !important;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+@media (min-width: 768px){
+    .navbar{
+        margin-left: 250px;
+    }
+}   
