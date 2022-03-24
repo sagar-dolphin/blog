@@ -13,6 +13,7 @@
           crossorigin="anonymous"/>
           @include('admin.layouts.includes.head')
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('admins/bootstrap/css/style.css')}}">
 
 </head>
 <body class="login-page" cz-shortcut-listen="true" style="min-height: 466px;">
@@ -68,14 +69,7 @@
                     <small class="text-danger"><b>{{$errors->first('password_confirmation')}}!</b></small>
                 @endif
             <div class="row">
-              <div class="col-8">
-                <div class="icheck-primary">
-                  <input type="checkbox" id="remember_me" name="remember_me">
-                  <label for="remember">
-                    Remember Me
-                  </label>
-                </div>
-              </div>
+             
               <!-- /.col -->
               <div class="col-4">
                 <button type="submit" style="background-color: #0969D9" class="btn btn-primary btn-block">Sign In</button>
@@ -94,6 +88,31 @@
       <!-- /.card -->
     </div>
     <!-- /.login-box -->
+
+
+
+<div class="container">
+  <div class="row">
+    <form id="userRegisterForm" class="shadow rounded bg-light p-5">
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1">
+      </div>
+      <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+        <label class="form-check-label" for="exampleCheck1">Check me out</label>
+      </div>
+      <button type="submit" class="btn btn-primary registerBtn">Submit</button>
+    </form>
+  </div>
+</div>
+    
+
     
     <!-- jQuery -->
     <script src="../../plugins/jquery/jquery.min.js"></script>

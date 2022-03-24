@@ -26,3 +26,12 @@ a {
         margin-left: 250px;
     }
 }   
+
+#userRegisterForm {
+    border-top: 5px solid pink !important;
+}
+
+.registerBtn {
+    background-color: pink !important;
+    border: 1px solid pink;
+}

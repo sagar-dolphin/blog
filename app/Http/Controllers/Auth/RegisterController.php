@@ -42,9 +42,11 @@ class RegisterController extends Controller
             ]);
             try {
                 Mail::to($request->email)->send(new VerifyUser($mailData));
-                return redirect()->back()->with($request->session()->flash('status', 'Mail sent successfully! Please verify your email address!'));
-            } catch (\Exception $e) {
-                return redirect()->back()->with($request->session()->flash('status', 'Failed to send mail!'));
+                $request->session()->flash('status', 'Mail sent successfully! Please verify your email address!');
+                return redirect()->back();
+            } catch (\Exception $e) {           
+                $request->session()->flash('status', 'Failed to send mail!');
+                return redirect()->back();
             }
     }
 
