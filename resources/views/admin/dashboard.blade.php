@@ -7,6 +7,7 @@
 @endpush
 
 @section('main-content')
+
   <!-- Content Wrapper. Contains page content -->
 
   @section('heading','Dashboard')

@@ -16,42 +16,57 @@
 
 </head>
 <body class="login-page" cz-shortcut-listen="true" style="min-height: 466px;">
+    @if (Session::has('status'))
+        <div class="alert alert-secondary">{{Session::get('status')}}</div>
+    @endif
     <div class="login-box">
-
       <div class="card align-items-center card-outline card-primary">
         <div class="card-body">
           <p class="login-box-msg">Register yourself</p>
-            @if($errors->any())
-                <small class="text-danger"><b>{{$errors->first()}}!</b></small>
-            @endif
           <form action="{{ route('admin.register') }}" method="POST">
 
             @csrf
 
             <div class="input-group mb-3">
-                <input type="text" id="name" name="name" class="form-control" placeholder="Name" required>
+                <input type="text" id="name" name="name" class="form-control" value="{{old('name')}}" placeholder="Name">
+                
+              </div>
+              @if($errors->has('name'))
+                  <small class="text-danger"><b>{{$errors->first('name')}}!</b></small>
+              @endif
+              <div class="input-group mb-3">
+                <input type="email" id="email" name="email" class="form-control" value="{{old('email')}}" placeholder="Email">
                 <div class="input-group-append">
                   <div class="input-group-text">
                     <span class="fas fa-envelope"></span>
                   </div>
                 </div>
               </div>
+              @if($errors->has('email'))
+                  <small class="text-danger"><b>{{$errors->first('email')}}!</b></small>
+              @endif
             <div class="input-group mb-3">
-              <input type="email" id="email" name="email" class="form-control" placeholder="Email" required>
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <span class="fas fa-envelope"></span>
-                </div>
-              </div>
-            </div>
-            <div class="input-group mb-3">
-              <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+              <input type="password" id="password" name="password" class="form-control" placeholder="Password">
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-lock"></span>
                 </div>
-              </div>
+              </div>  
             </div>
+              @if($errors->has('password'))
+                  <small class="text-danger"><b>{{$errors->first('password')}}!</b></small>
+              @endif
+              <div class="input-group mb-3">
+                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="Confirm Password">
+                <div class="input-group-append">
+                  <div class="input-group-text">
+                    <span class="fas fa-lock"></span>
+                  </div>
+                </div>
+              </div>
+                @if($errors->has('password_confirmation'))
+                    <small class="text-danger"><b>{{$errors->first('password_confirmation')}}!</b></small>
+                @endif
             <div class="row">
               <div class="col-8">
                 <div class="icheck-primary">
@@ -68,26 +83,14 @@
               <!-- /.col -->
             </div>
           </form>
-    
-          {{-- <div class="social-auth-links text-center mt-2 mb-3">
-            <a href="#" class="btn btn-block btn-primary">
-              <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
-            </a>
-            <a href="#" class="btn btn-block btn-danger">
-              <i class="fab fa-google-plus mr-2"></i> Sign in using Google+
-            </a>
-          </div> --}}
           <!-- /.social-auth-links -->
-    
-          <p class="mb-1">
-            <a href="forgot-password">I forgot my password</a>
-          </p>
-          {{-- <p class="mb-0">
-            <a href="register.html" class="text-center">Register a new membership</a>
-          </p> --}}
+  
+          <span class="">Already registered? <a href="/admin/login" class="under">Login</a></span>
+
         </div>
         <!-- /.card-body -->
       </div>
+      
       <!-- /.card -->
     </div>
     <!-- /.login-box -->

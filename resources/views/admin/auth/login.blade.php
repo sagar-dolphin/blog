@@ -16,37 +16,47 @@
 
 </head>
 <body class="login-page" cz-shortcut-listen="true" style="min-height: 466px;">
+    @if (Session::has('verify-message'))
+      <div class="alert alert-secondary">{{Session::get('verify-message')}}</div>
+    @endif
+    @if (Session::has('msg'))
+          <small class="text-danger">{{ Session::get('msg')}}</small>
+    @endif
+    @if (Session::has('password_message'))
+          <span class="alert alert-secondary">{{ Session::get('password_message')}}</span>
+    @endif
+    @if (Session::has('status'))
+          <span class="alert alert-secondary">{{ Session::get('status')}}</span>
+    @endif
     <div class="login-box">
       <!-- /.login-logo -->
       <div class="card align-items-center card-outline card-primary">
-        {{-- <div class="card-header text-center">
-          <a href="../../index2.html" class="h1"><b>Admin</b>LTE</a>
-        </div> --}}
         <div class="card-body">
           <p class="login-box-msg">Sign in to start your session</p>
-            @if($errors->any())
-                <small class="text-danger"><b>{{$errors->first()}}!</b></small>
-            @endif
           <form action="{{ route('admin.login') }}" method="POST">
-
             @csrf
-
             <div class="input-group mb-3">
-              <input type="email" id="email" name="email" class="form-control" placeholder="Email" required>
+              <input type="email" id="email" name="email" class="form-control" value="{{old('email')}}" placeholder="Email">
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-envelope"></span>
                 </div>
               </div>
             </div>
+              @if($errors->has('email'))
+                  <small class="text-danger"><b>{{$errors->first('email')}}!</b></small>
+              @endif
             <div class="input-group mb-3">
-              <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+              <input type="password" id="password" name="password" class="form-control" value="{{old('password')}}" placeholder="Password">
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-lock"></span>
                 </div>
               </div>
             </div>
+              @if($errors->has('password'))
+                  <small class="text-danger"><b>{{$errors->first('password')}}!</b></small>
+              @endif
             <div class="row">
               <div class="col-8">
                 <div class="icheck-primary">
@@ -75,14 +85,15 @@
           <!-- /.social-auth-links -->
     
           <p class="mb-1">
-            <a href="forgot-password">I forgot my password</a>
+            <a href="{{ route('forget.password.get') }}">I forgot my password</a>
           </p>
+          <span class="m-3">New user? <a href="/admin/register" class="under">Sign Up</a></span>
           {{-- <p class="mb-0">
             <a href="register.html" class="text-center">Register a new membership</a>
           </p> --}}
         </div>
         <!-- /.card-body -->
-      </div>
+      </div>  
       <!-- /.card -->
     </div>
     <!-- /.login-box -->
