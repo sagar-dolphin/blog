@@ -19,15 +19,18 @@ class LoginController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $credentials = $request->only('email', 'password');
-        if (Auth::attempt($credentials)) {
-            $user = User::where(["email" => $credentials['email']])->first();
-            $remember_me  = ( !empty( $request->remember_me ) )? TRUE : FALSE;
-            Auth::login($user, $remember_me);
-            // Authentication passed...
-            return redirect()->intended('admin');
-        }else {
-            return redirect()->back()->with(Session::flash('msg' , 'Oops, Your credentials does not match with our records!'));
+        try {
+            $credentials = $request->only('email', 'password');
+            if (Auth::attempt($credentials)) {
+                $user = User::where(["email" => $credentials['email']])->first();
+                $remember_me  = ( !empty( $request->remember_me ) )? TRUE : FALSE;
+                Auth::login($user, $remember_me);
+                // Authentication passed...
+                return redirect()->intended('admin');
+            }
+        } catch (\Exception $e) {
+            Session::flash('msg' , 'Oops, Your credentials does not match with our records!');
+            return redirect()->back();
         }
     }
 

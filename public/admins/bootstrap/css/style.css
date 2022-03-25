@@ -1,6 +1,8 @@
 body{
     margin: 0;
     padding: 0;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 .bg-pink {
@@ -27,11 +29,37 @@ a {
     }
 }   
 
-#userRegisterForm {
-    border-top: 5px solid pink !important;
+.registerBtn, .resetPassBtn {
+    background-color: pink !important;
+    border: 1px solid pink !important;
 }
 
-.registerBtn {
+#tokenMsg {
+   position: relative;
+   bottom: 7rem; 
+}
+
+.mt-10 {
+    margin-top: 10rem;
+}
+.m-10 {
+    margin-top: 3rem;
+}
+
+.alert-success {
+    color: palevioletred !important;
     background-color: pink !important;
-    border: 1px solid pink;
+}
+
+#userRegisterForm, #userLoginForm {
+    box-shadow: 5px 10px 10px pink !important;
+}
+
+#headTitle {
+    position: relative;
+    top: 4rem;
+}
+
+#users-table_wrapper {
+    margin-top: 5rem;
 }

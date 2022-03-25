@@ -24,10 +24,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::prefix('admin')->middleware('auth')->group(function(){
-//     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('admin.home');
-// });
-
 Route::prefix('admin')->group(function(){
     Route::get('register', [RegisterController::class, 'showRegisterForm'])->name('admin.register');
     Route::post('register', [RegisterController::class, 'register']);
@@ -41,7 +37,8 @@ Route::prefix('admin')->group(function(){
     Route::get('email/verify/{token}', [RegisterController::class, 'verifyAccount'])->name('user.verify');
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('admin.home');
-        Route::get('users', [UserController::class, 'index'])->name('admin.users');
-        Route::get('blogs', [BlogController::class, 'index'])->name('admin.blogs');
+        // Route::get('users', [UserController::class, 'index'])->name('admin.users.index');
+        // Route::get('blogs', [BlogController::class, 'index'])->name('admin.blogs');
+        Route::resource('users', UserController::class);
     });
 });

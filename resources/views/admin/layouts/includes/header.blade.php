@@ -1,7 +1,7 @@
 
 
  <!-- Navbar -->
- <nav class="navbar navbar-expand-lg navbar-dark bg-pink">
+ <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-pink">
   <div class="container-fluid">
     <a class="navbar-brand text-light" href="#"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,7 +23,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-            <h1 class="m-0">@yield('heading')</h1>
+            <h1 id="headTitle" class="m-0">@yield('heading')</h1>
         </div><!-- /.col -->
       </div><!-- /.row -->
     </div><!-- /.container-fluid -->

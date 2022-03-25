@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Auth;
   
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request; 
+use App\Mail\ResetPassword;
+use App\Http\Requests\SubmitForgetPasswordRequest;
+use App\Http\Requests\SubmitResetPasswordRequest;
 use DB; 
+use URL;
 use Carbon\Carbon; 
 use App\Models\User; 
 use Mail; 
@@ -28,26 +32,25 @@ class ForgotPasswordController extends Controller
        *
        * @return response()
        */
-      public function submitForgetPasswordForm(Request $request)
+      public function submitForgetPasswordForm(SubmitForgetPasswordRequest $request)
       {
-          $request->validate([
-              'email' => 'required|email|exists:users',
-          ]);
-  
-          $token = Str::random(64);
-  
-          DB::table('password_resets')->insert([
-              'email' => $request->email, 
-              'token' => $token, 
-              'created_at' => Carbon::now()
-            ]);
-  
-          Mail::send('admin.emails.forgetPassword', ['token' => $token], function($message) use($request){
-              $message->to($request->email);
-              $message->subject('Reset Password');
-          });
-  
-          return back()->with('message', 'We have e-mailed your password reset link!');
+
+        try {
+            $token = Str::random(64);
+            DB::table('password_resets')->insert([
+                'email' => $request->email, 
+                'token' => $token, 
+                'created_at' => Carbon::now()
+              ]); 
+              $mailData = [
+                  'url' => URL::to('/').'/admin/reset-password/'.$token,
+              ];
+              Mail::to($request->email)->send(new ResetPassword($mailData));
+              return back()->with('message', 'We have e-mailed your password reset link!');
+        } catch (\Exception $e) {
+            return back()->with('message', 'Something went wrong!');
+        }
+         
       }
       /**
        * Write code on Method
@@ -63,28 +66,24 @@ class ForgotPasswordController extends Controller
        *
        * @return response()
        */
-      public function submitResetPasswordForm(Request $request)
+      public function submitResetPasswordForm(SubmitResetPasswordRequest $request)
       {
-          $request->validate([
-              'email' => 'required|email|exists:users',
-              'password' => 'required|string|min:6|confirmed',
-              'password_confirmation' => 'required'
-          ]);
-          $updatePassword = DB::table('password_resets')
-                              ->where([
-                                'email' => $request->email, 
-                                'token' => $request->token
-                              ])
-                              ->first();
-  
-          if(!$updatePassword){
-              return back()->withInput()->with('error', 'Invalid token!');
+          try {
+            $updatePassword = DB::table('password_resets')->where([
+              'email' => $request->email, 
+              'token' => $request->token
+            ])->first();
+            if(!$updatePassword){
+                return back()->withInput()->with('token', 'Invalid token!');
+            }
+            $user = User::where('email', $request->email)
+            ->update(['password' => Hash::make($request->password)]);
+            DB::table('password_resets')->where(['email'=> $request->email])->delete();
+            $request->session()->flash('password_message', 'Your password has been changed!');
+            return redirect()->route('admin.login');
+          } catch (\Exception $e) {
+            $request->session()->flash('password_message', 'Something went wrong!');
+            return redirect()->route('admin.login');
           }
-  
-          $user = User::where('email', $request->email)
-                      ->update(['password' => Hash::make($request->password)]);
- 
-          DB::table('password_resets')->where(['email'=> $request->email])->delete();
-          return redirect()->route('admin.login')->with($request->session()->flash('password_message', 'Your password has been changed!'));
       }
 }

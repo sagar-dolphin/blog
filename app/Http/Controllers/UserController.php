@@ -3,21 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\UserRequest;
+use App\Models\User;
+use App\Services\UserService;
 
 class UserController extends Controller
 {
-
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, UserService $userService)
     {
+        if($request->ajax()){
+           return $userService->getDataTable();
+        }
+
         return view('admin.users.index');
     }
 

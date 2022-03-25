@@ -17,103 +17,53 @@
 
 </head>
 <body class="login-page" cz-shortcut-listen="true" style="min-height: 466px;">
+
+
+<div class=" d-flex justify-content-center">
+  <div class="row">
     @if (Session::has('status'))
         <div class="alert alert-secondary">{{Session::get('status')}}</div>
     @endif
-    <div class="login-box">
-      <div class="card align-items-center card-outline card-primary">
-        <div class="card-body">
-          <p class="login-box-msg">Register yourself</p>
-          <form action="{{ route('admin.register') }}" method="POST">
-
-            @csrf
-
-            <div class="input-group mb-3">
-                <input type="text" id="name" name="name" class="form-control" value="{{old('name')}}" placeholder="Name">
-                
-              </div>
-              @if($errors->has('name'))
-                  <small class="text-danger"><b>{{$errors->first('name')}}!</b></small>
-              @endif
-              <div class="input-group mb-3">
-                <input type="email" id="email" name="email" class="form-control" value="{{old('email')}}" placeholder="Email">
-                <div class="input-group-append">
-                  <div class="input-group-text">
-                    <span class="fas fa-envelope"></span>
-                  </div>
-                </div>
-              </div>
-              @if($errors->has('email'))
-                  <small class="text-danger"><b>{{$errors->first('email')}}!</b></small>
-              @endif
-            <div class="input-group mb-3">
-              <input type="password" id="password" name="password" class="form-control" placeholder="Password">
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <span class="fas fa-lock"></span>
-                </div>
-              </div>  
-            </div>
-              @if($errors->has('password'))
+    
+    <form id="userRegisterForm" action="{{ route('admin.register') }}" method="POST" class="shadow rounded bg-light p-5">
+      @csrf
+      <h3 class="mb-5 text-center">Register Your Self</h3>
+      <div class="mb-3">
+        <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+        <input type="text" id="name" name="name" class="form-control" value="{{old('name')}}" placeholder="Name">
+        @if($errors->has('name'))
+            <small class="text-danger"><b>{{$errors->first('name')}}!</b></small>
+        @endif
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+        <input type="email" id="email" name="email" class="form-control" value="{{old('email')}}" placeholder="Email">
+        <div class="form-text">We'll never share your email with anyone else.</div>
+        @if($errors->has('email'))
+            <small class="text-danger"><b>{{$errors->first('email')}}!</b></small>
+        @endif
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
+        <input type="password" id="password" name="password" class="form-control" placeholder="Password">
+        @if($errors->has('password'))
                   <small class="text-danger"><b>{{$errors->first('password')}}!</b></small>
-              @endif
-              <div class="input-group mb-3">
-                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="Confirm Password">
-                <div class="input-group-append">
-                  <div class="input-group-text">
-                    <span class="fas fa-lock"></span>
-                  </div>
-                </div>
-              </div>
-                @if($errors->has('password_confirmation'))
-                    <small class="text-danger"><b>{{$errors->first('password_confirmation')}}!</b></small>
-                @endif
-            <div class="row">
-             
-              <!-- /.col -->
-              <div class="col-4">
-                <button type="submit" style="background-color: #0969D9" class="btn btn-primary btn-block">Sign In</button>
-              </div>
-              <!-- /.col -->
-            </div>
-          </form>
-          <!-- /.social-auth-links -->
-  
-          <span class="">Already registered? <a href="/admin/login" class="under">Login</a></span>
-
-        </div>
-        <!-- /.card-body -->
-      </div>
-      
-      <!-- /.card -->
-    </div>
-    <!-- /.login-box -->
-
-
-
-<div class="container">
-  <div class="row">
-    <form id="userRegisterForm" class="shadow rounded bg-light p-5">
-      <div class="mb-3">
-        <label for="exampleInputEmail1" class="form-label">Email address</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+        @endif
       </div>
       <div class="mb-3">
-        <label for="exampleInputPassword1" class="form-label">Password</label>
-        <input type="password" class="form-control" id="exampleInputPassword1">
+        <label for="cnfpassword" class="form-label">Confirm Password</label>
+        <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="Confirm Password">
+        @if($errors->has('password_confirmation'))
+           <small class="text-danger"><b>{{$errors->first('password_confirmation')}}!</b></small>
+        @endif
       </div>
-      <div class="mb-3 form-check">
-        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-        <label class="form-check-label" for="exampleCheck1">Check me out</label>
-      </div>
-      <button type="submit" class="btn btn-primary registerBtn">Submit</button>
+      <button type="submit" class="btn btn-primary registerBtn">Submit</button><br>
+      <span>Already registered? <a href="/admin/login" style="color:pink !important; font-weight:bold;">Login</a></span>  
     </form>
   </div>
 </div>
     
 
-    
     <!-- jQuery -->
     <script src="../../plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
