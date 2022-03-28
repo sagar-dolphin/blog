@@ -1,7 +1,9 @@
 @extends('admin.layouts.app')
 
 @section('title', 'Users')
-@push('admin_dashboard_style')
+@push('yajra_datatable_css_cdn')
+    <!-- DataTables -->
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="{{ asset('admins/bootstrap/css/style.css') }}">
 @endpush
 
@@ -11,7 +13,7 @@
 {{-- @section('data-target', '#addUserModal') --}}
 
   {{-- User's Datatable --}}
-  <table class="table table-bordered text-center m-10 w-100" id="users-table">
+  <table class="table table-bordered text-center" id="users-table">
     <span id="userStatusMsg"></span>
     <thead>
         <tr>
@@ -41,7 +43,6 @@
                 serverSide: true,
                 ajax: '{{ route('users.index')}}',
                 columns: [
-                    // {data: 'id', name: 'id'},
                     {data: 'name', name: 'name'},
                     {data: 'email', name: 'email'},
                     {data: 'action', name: 'action', orderable: false},
@@ -53,6 +54,20 @@
             });
         }   
         index();
+
+        $("#users-table").on('click', '.edit-user', function(ev){
+            ev.preventDefault();
+            var id = $(this).data('id');
+            $.ajax({
+                url: '/admin/users/'+id+'/edit',
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')},
+                type: 'get',
+                success: function(data){
+                    console.log(data);
+                }
+            });
+            
+        })
     </script>
     
 @endpush

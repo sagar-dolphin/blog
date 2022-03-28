@@ -61,9 +61,19 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, User $user)
     {
-        //
+        if($request->ajax()){
+            try {
+                return view('admin.users.create', ['user' => $user]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'status' => 'fail',
+                    'message' => 'Something went wrong!',
+                ]);
+            }
+        }
+        
     }
 
     /**

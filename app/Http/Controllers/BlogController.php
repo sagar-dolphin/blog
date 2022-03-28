@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\BlogRequest;
+use App\Services\BlogService;
+use Illuminate\Contracts\Validation\Validator;
+use App\Models\Blog;
 
 class BlogController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -37,9 +36,11 @@ class BlogController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(BlogRequest $request, BlogService $blogService)
+    {   
+        if($request->ajax() && $request->validated()){
+            $blogService->createBlog($request);
+        }
     }
 
     /**

@@ -48,4 +48,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $this->attributes['password'] = bcrypt($value);
     }
+
+    public function getNameAttribute($name)
+    {
+        return ucfirst($name);
+    }
 }

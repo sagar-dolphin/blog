@@ -40,5 +40,8 @@ Route::prefix('admin')->group(function(){
         // Route::get('users', [UserController::class, 'index'])->name('admin.users.index');
         // Route::get('blogs', [BlogController::class, 'index'])->name('admin.blogs');
         Route::resource('users', UserController::class);
+        Route::resource('users/edit', UserController::class);
+        Route::resource('blogs', BlogController::class);
+        Route::resource('blogs/store', BlogController::class);
     });
 });

@@ -8,7 +8,7 @@
     <title> @yield('title') </title>
     @include('admin.layouts.includes.head')
     @stack('yajra_datatable_css_cdn')
-    @stack('admin_dashboard_style')
+    {{-- @stack('admin_dashboard_style') --}}
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">

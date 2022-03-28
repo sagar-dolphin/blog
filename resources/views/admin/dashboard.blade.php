@@ -1,8 +1,9 @@
 @extends('admin.layouts.app')
 
 @section('title', 'Dashboard')
-@push('admin_dashboard_style')
+@push('yajra_datatable_css_cdn')
     <!-- DataTables -->
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="{{ asset('admins/bootstrap/css/style.css') }}">
 @endpush
 

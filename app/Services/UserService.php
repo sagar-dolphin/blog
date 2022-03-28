@@ -14,12 +14,12 @@ class UserService {
         $users = User::select('*');
         return DataTables::eloquent($users)
         ->addColumn('action', function($users){
-            $getHtml = '<button class="btn user" data-id="'.$users->id.'">';
+            $getHtml = '<button class="btn edit-user" data-id="'.$users->id.'">';
             $getHtml .= '<i class="fas fa-edit"></i>';
             $getHtml .= '</button>';
-            $getHtml .= '<button class="btn removeUser" data-id="'.$users->id.'">';
-            $getHtml .= '<i class="fa fa-trash"></i>';
-            $getHtml .= '</button>';
+            // $getHtml .= '<button class="btn removeUser" data-id="'.$users->id.'">';
+            // $getHtml .= '<i class="fa fa-trash"></i>';
+            // $getHtml .= '</button>';
             return $getHtml;
         })
         ->rawColumns(['action'])

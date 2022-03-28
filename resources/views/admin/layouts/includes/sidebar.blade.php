@@ -20,7 +20,7 @@
     </li>
     <li>
       <a href="/admin/blogs" class="nav-link link-dark {{ request()->is('admin/blogs*') ? 'active' : '' }}">
-        <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"></use></svg>
+        <svg class="bi me-2" width="16" height="16"><use xlink:href=""></use></svg>
         Blogs
       </a>
     </li>
