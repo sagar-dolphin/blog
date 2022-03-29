@@ -37,8 +37,6 @@ Route::prefix('admin')->group(function(){
     Route::get('email/verify/{token}', [RegisterController::class, 'verifyAccount'])->name('user.verify');
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('admin.home');
-        // Route::get('users', [UserController::class, 'index'])->name('admin.users.index');
-        // Route::get('blogs', [BlogController::class, 'index'])->name('admin.blogs');
         Route::resource('users', UserController::class);
         Route::resource('users/edit', UserController::class);
         Route::resource('blogs', BlogController::class);

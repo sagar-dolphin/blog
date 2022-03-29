@@ -24,8 +24,10 @@
       <div class="row mb-2">
         <div class="col-sm-6">
             <h1 id="headTitle" class="m-0">@yield('heading')</h1>
-            <button id="add_blog_btn" data-toggle="modal" style="color: white;" data-target="@yield('data-target')" class="btn-primary">Add @yield('heading')</button>
-        </div><!-- /.col -->
+            @if (!request()->routeIs('admin.home'))
+              <button id="add_blog_btn" data-toggle="modal" style="color: white;" data-target="@yield('data-target')" class="btn-primary">Add @yield('heading')</button>
+            @endif
+          </div><!-- /.col -->
       </div><!-- /.row -->
     </div><!-- /.container-fluid -->
   </div>

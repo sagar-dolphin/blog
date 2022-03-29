@@ -15,8 +15,12 @@ class BlogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, BlogService $blogService)
     {
+        
+        if($request->ajax()){
+           return $blogService->getDataTables();
+        }
         return view('admin.blogs.index');
     }
 
@@ -38,9 +42,21 @@ class BlogController extends Controller
      */
     public function store(BlogRequest $request, BlogService $blogService)
     {   
-        if($request->ajax() && $request->validated()){
-            $blogService->createBlog($request);
+        try {
+            if($request->ajax() && $request->validated()){
+                $blogService->createBlog($request);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Blog successfully created'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!'
+            ]);
         }
+        
     }
 
     /**

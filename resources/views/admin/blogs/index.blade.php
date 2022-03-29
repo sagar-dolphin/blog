@@ -20,8 +20,6 @@
                 <th>Title</th>
                 <th>Slug</th>
                 <th>Description</th>
-                <th>Status</th>
-                <th>Created_by</th>
                 <th>Image</th>
                 <th>Action</th>
             </tr>
@@ -38,35 +36,24 @@
           <button type="button" class="btn-close btn" data-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
         </div>
         <div class="modal-body">
-            <form id="addBlogForm" method="Post" enctype="multipart/form-data">
+            <form id="addBlogForm" method="POST" enctype="multipart/form-data">
+                @csrf
                 <div class="mb-3">
                     <label for="name" class="form-label">Title <b class="text-danger">*</b></label>
-                    <input type="text" class="form-control" name="title" id="title">
-                    @if ($errors->has('title'))
-                        <small class="text-danger">{{ $errors->first('title') }}</small>
-                    @endif
+                    <input type="text" class="form-control" name="title">
                 </div>
                 <div class="mb-3">
                     <label for="slug" class="form-label">Slug <b class="text-danger">*</b></label>
-                    <input type="text" class="form-control" name="slug" id="slug">
+                    <input type="text" class="form-control" name="slug">
                 </div>
-                @if ($errors->has('slug'))
-                    <small class="text-danger">{{ $errors->first('slug') }}</small>
-                @endif
                 <div class="mb-3">
-                    <label id="description-msg" for="name" class="form-label">Description <b class="text-danger">*</b></label>
+                    <label id="description" for="name" class="form-label">Description <b class="text-danger">*</b></label>
                     <textarea id="editor" name="description"></textarea>
                 </div>
-                @if ($errors->has('description'))
-                    <small class="text-danger">{{ $errors->first('description') }}</small>
-                @endif
                 <div class="mb-3">
                     <label for="name" class="form-label">Images <b class="text-danger">*</b></label>
-                    <input type="file" name="images[]" id="image" multiple>
+                    <input type="file" name="images[]" multiple>
                 </div>
-                @if ($errors->has('images'))
-                    <small class="text-danger">{{ $errors->first('images') }}</small>
-                @endif
                 <div class="mb-3">
                     <input type="checkbox" name="status" value="1" id="status" checked> Publish
                 </div>
@@ -84,8 +71,9 @@
 
 @push('scripts')
     <script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/30.0.0/classic/ckeditor.js"></script>   
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
+    <script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
     <script>
         ClassicEditor
             .create( document.querySelector( '#editor' ) )
@@ -99,21 +87,67 @@
             }
         });
 
+        function index() {
+            $('#blogs-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: '{{ route('blogs.index')}}',
+                columns: [
+                    {data: 'title', name: 'title'},
+                    {data: 'slug', name: 'slug'},
+                    {data: 'description', name: 'description'},
+                    {data: 'name', name: 'name'},
+                    {data: 'action', name: 'action', orderable: false},
+                ],
+                order: [[0, 'asc']],
+                paging: true,
+                searching: true,
+                destroy: true
+            });
+        }   
+        index();
+
         $("#addBlogForm").on('submit', function(ev){
             ev.preventDefault();
+            console.log('submit');
             var formData = new FormData(this);
-            $.ajax({
-                url: '/admin/blogs/store',
-                headers: {'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')},
-                type: 'post',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response){
-                    console.log(response);
+            $(this).validate({
+                ignore: [],
+                rules: {
+                    title: 'required',
+                    slug: 'required',
+                    accept: "image/*",
+                    description: 'required',
+                    'images[]': {
+                        required: true,
+                        extension: 'jpg,png,jpeg',
+                    }
+                },
+                messages: {
+                    title: '<small class="text-danger">Title is required!</small>',
+                    slug: '<small class="text-danger">Slug is required!</small>',
+                    accept: '<small class="text-danger">File should be an image!</small>',
+                    description: '<small class="text-danger">Description is required!</small>',
+                    'images[]': {
+                       required: '<small class="text-danger">Image is required!</small>',
+                       extension: '<small class="text-danger">Only jpg/png/jpeg file is allowed!</small>',
+                    }
                 }
             });
-        })
+            if($(this).valid()){
+                    $.ajax({
+                    url: '/admin/blogs/store',
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')},
+                    type: 'post',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response){
+                        console.log(response);
+                    },
+                });
+            }
+        });
 
 
     </script>

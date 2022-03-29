@@ -47,50 +47,6 @@
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 {{-- <script src="{{ asset('admins/dist/js/pages/dashboard.js')}}"></script> --}}
 
-<script>
-  // $(function(){
-  //   // Add active class to nav-link based on url dynamically
-  //   // Active class can be hard coded directly in html file also as required
-  //   var current = location.pathname.split("/").slice(-1)[0].replace(/^\/|\/$/g, '');
-  //   $('#sidebar > .nav > .nav-item > a').each(function() {
-  //     var $this = $(this);
-  //       //for other url
-  //       if(current != 'admin'){
-  //           if ($this.attr('href').indexOf(current) !== -1) {
-  //           $(this).parents('.nav-item').last().addClass('active');
-  //           if ($(this).parents('.nav-item').length) {
-  //             $(this).addClass('active');
-  //           }
-  //         }
-  //       }
+{{-- Datatable --}}
+<script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
 
-  //   });
-  // });
-
-  var make_button_active = function()
-  {
-    //Get item siblings
-    var siblings =($(this).siblings());
-    console.log("siblings:: ",siblings);
-
-    //Remove active class on all buttons
-    siblings.each(function (index)
-      {
-        $(this).removeClass('active');
-      }
-    )
-
-
-    //Add the clicked button class
-    $(this).addClass('active');
-}
-
-//Attach events to menu
-$(document).ready(
-  function()
-  {
-    // $(".nav-link").click(make_button_active);
-  }  
-)
-
-</script>
