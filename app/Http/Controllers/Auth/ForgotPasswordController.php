@@ -69,21 +69,21 @@ class ForgotPasswordController extends Controller
       public function submitResetPasswordForm(SubmitResetPasswordRequest $request)
       {
           try {
-            $updatePassword = DB::table('password_resets')->where([
-              'email' => $request->email, 
-              'token' => $request->token
-            ])->first();
-            if(!$updatePassword){
-                return back()->withInput()->with('token', 'Invalid token!');
-            }
-            $user = User::where('email', $request->email)
-            ->update(['password' => Hash::make($request->password)]);
-            DB::table('password_resets')->where(['email'=> $request->email])->delete();
-            $request->session()->flash('password_message', 'Your password has been changed!');
-            return redirect()->route('admin.login');
-          } catch (\Exception $e) {
-            $request->session()->flash('password_message', 'Something went wrong!');
-            return redirect()->route('admin.login');
-          }
+              $updatePassword = DB::table('password_resets')->where([
+                'email' => $request->email, 
+                'token' => $request->token
+              ])->first();
+              if(!$updatePassword){
+                  return back()->withInput()->with('token', 'Invalid token!');
+              }
+              $user = User::where('email', $request->email)
+              ->update(['password' => Hash::make($request->password)]);
+              DB::table('password_resets')->where(['email'=> $request->email])->delete();
+              $request->session()->flash('password_message', 'Your password has been changed!');
+              return redirect()->route('admin.login');
+        } catch (\Exception $e) {
+          $request->session()->flash('password_message', 'Something went wrong!');
+          return redirect()->route('admin.login');
+        }
       }
 }

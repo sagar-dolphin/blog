@@ -36,7 +36,7 @@
     <div class="d-flex justify-content-center">
        
       <div class="row">
-        <form id="userLoginForm" action="{{ route('admin.login') }}" method="POST" class="shadow rounded bg-light p-5">
+        <form id="userLoginForm" action="{{ route('admin.login.post') }}" method="POST" class="shadow rounded bg-light p-5">
           @csrf
           <h3 class="mb-2 text-center">Login</h3>
           <div class="mb-3">

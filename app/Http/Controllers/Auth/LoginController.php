@@ -26,10 +26,13 @@ class LoginController extends Controller
                 $remember_me  = ( !empty( $request->remember_me ) )? TRUE : FALSE;
                 Auth::login($user, $remember_me);
                 // Authentication passed...
-                return redirect()->intended('admin');
+                return redirect()->route('admin.home');
+            }else{ 
+                $request->session()->flash('msg', 'Oops, Your credentials does not match with our records!');
+                return redirect()->back();
             }
         } catch (\Exception $e) {
-            Session::flash('msg' , 'Oops, Your credentials does not match with our records!');
+            $request->session()->flash('msg', 'Something went wrong!');
             return redirect()->back();
         }
     }

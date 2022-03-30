@@ -16,16 +16,17 @@ class BlogService {
     public $request;
 
     public function __construct(BlogRequest $request)
-    {
+    {        
         $this->request = $request;
     }
 
     public function getDataTables()
     {
+        // echo "sdfsdf111";exit;
         $blogs = Blog::select('*');
-        dd($blogs);
-        return DataTables::eloquent('blogs')
-        ->addColumn('action', function($users){
+        // dd($blogs);
+        return DataTables::eloquent($blogs)
+        ->addColumn('action', function($blogs){
             $getHtml = '<button class="btn edit-blog" data-id="'.$blogs->id.'">';
             $getHtml .= '<i class="fas fa-edit"></i>';
             $getHtml .= '</button>';

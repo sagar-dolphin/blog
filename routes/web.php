@@ -28,7 +28,7 @@ Route::prefix('admin')->group(function(){
     Route::get('register', [RegisterController::class, 'showRegisterForm'])->name('admin.register');
     Route::post('register', [RegisterController::class, 'register']);
     Route::get('login', [LoginController::class, 'showLoginForm'])->name('admin.login');
-    Route::post('login', [LoginController::class, 'login']);
+    Route::post('login', [LoginController::class, 'login'])->name('admin.login.post');
     Route::get('logout',[LoginController::class, 'logout']);
     Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
     Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post'); 
@@ -38,8 +38,10 @@ Route::prefix('admin')->group(function(){
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('admin.home');
         Route::resource('users', UserController::class);
-        Route::resource('users/edit', UserController::class);
+        // Route::resource('users/edit', UserController::class);
+        
+        // Route::resource('blogs/store', BlogController::class);
         Route::resource('blogs', BlogController::class);
-        Route::resource('blogs/store', BlogController::class);
-    });
+    });    
 });
+// Route::resource('blogs', BlogController::class);

@@ -46,10 +46,16 @@ a {
     margin: 5rem;
 }
 
-.alert-success {
+#blogStatusMsg {
+    position: relative;
+    left: 39rem;
+    bottom: 2rem;
+    box-shadow: 10px 10px 10px grey;
+}
+/* .alert-success {
     color: #fda1ff !important;
     background-color: #fda1ff !important;
-}
+} */
 
 #userRegisterForm, #userLoginForm {
     box-shadow: 5px 10px 10px #fda1ff !important;
