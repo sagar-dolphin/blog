@@ -153,3 +153,32 @@ table.dataTable th:nth-child(1), table.dataTable th:nth-child(3) {
 .ck-toolbar {
     color: #fda1ff !important;
 }
+
+input[type="file"] {
+    display: block;
+  }
+  .imageThumb {
+    max-height: 75px;
+    border: 2px solid;
+    padding: 1px;
+    cursor: pointer;
+  }
+  .pip {
+    display: inline-block;
+    margin: 10px 10px 0 0;
+  }
+  .remove {
+    position: relative;
+    bottom: 4.5rem;
+    padding: 2px;
+    left: 5.8rem;
+    background: transparent;
+    border: 1px solid black;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+  }
+  .remove:hover {
+    background: transparent;
+    color: black;
+  }

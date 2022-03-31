@@ -3,7 +3,7 @@
 @section('title', 'Blogs')
 @push('yajra_datatable_css_cdn')
     <link rel="stylesheet" href="{{ asset('admins/bootstrap/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('admins/image-uploader/dist/image-uploader.min.css')}}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/min/dropzone.min.css" rel="stylesheet">
 @endpush
 
 @section('main-content')
@@ -35,7 +35,7 @@
           <button type="button" id="closeBlogModelBtn" class="btn-close btn" data-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
         </div>
         <div class="modal-body">
-            <form id="addBlogForm" method="POST" enctype="multipart/form-data">
+            <form class="addBlogForm" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
                     <label for="name" class="form-label">Title <b class="text-danger">*</b></label>
@@ -47,12 +47,13 @@
                 </div>
                 <div class="mb-3">
                     <label id="description" for="name" class="form-label">Description <b class="text-danger">*</b></label>
-                    <textarea id="editor" name="description"></textarea>
+                    <textarea class="editor" name="description"></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="name" class="form-label">Images <b class="text-danger">*</b></label>
-                    {{-- <input type="file" name="images[]" multiple> --}}
-                    <div class="input-images"></div>
+                    <div class="dropzone">
+
+                    </div>
                 </div>
                 <div class="mb-3">
                     <input type="checkbox" name="status" value="1" id="status" checked> Publish
@@ -68,7 +69,7 @@
   </div>
 
 
-  {{-- Edit Blog Modal --}}
+  {{-- Edit Blog Modal
   <div class="modal fade" id="editBlogModal" tabindex="-1" aria-labelledby="editBlogModal" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -90,11 +91,11 @@
                 </div>
                 <div class="mb-3">
                     <label id="description" for="name" class="form-label">Description <b class="text-danger">*</b></label>
-                    <textarea id="editor" name="description"></textarea>
+                    <textarea class="editor" name="description"></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="name" class="form-label">Images <b class="text-danger">*</b></label>
-                    <input type="file" name="images[]" multiple>
+                    <div class="input-images"></div>
                 </div>
                 <div class="mb-3">
                     <input type="checkbox" name="status" value="1" id="status" checked> Publish
@@ -107,7 +108,7 @@
         </form>
       </div>
     </div>
-  </div>
+  </div> --}}
 
 @endsection
 
@@ -115,9 +116,14 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/30.0.0/classic/ckeditor.js"></script>   
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
     <script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
-    <script src="{{ asset('admins/image-uploader/dist/image-uploader.min.js')}}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.2.0/min/dropzone.min.js"></script>
     <script>
-        
+
+        // Image Uploader   
+        $(".dropzone").dropzone({
+            url: '/admin/blogs/store',
+        });
+
         $.ajaxSetup({
             headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -125,13 +131,12 @@
         });
         
         ClassicEditor
-            .create( document.querySelector( '#editor' ) )
+            .create( document.querySelector( '.editor' ) )
             .catch( error => {
                 console.error( error );
-            } );
+            });
 
-        $(".input-images").imageUploader();
-
+        
         function index() {
             $('#blogs-table').DataTable({
                 processing: true,
@@ -151,11 +156,32 @@
             });
         }   
         index();
+         
+        var images = [];
+        // Image Uploading
+        $(document).ready(function() {
+            if (window.File && window.FileList && window.FileReader) {
+                $("[type='file']").on("change", function(e) {
+                    var files = e.target.files;
+                    filesLength = files.length; 
+                    for(let i=0; i<filesLength; i++){
+                        images.push(files[i]);
+                    }
+                });
+            } else {
+                alert("Your browser doesn't support to File API")
+            }
+        });
 
-        $("#addBlogForm").on('submit', function(ev){
+        $("[type='file']").attr('name', 'images[]');
+
+        $(".addBlogForm").on('submit', function(ev){
             ev.preventDefault();
-            console.log('submit');
             var formData = new FormData(this);
+            formData.append('images', JSON.stringify(images));
+            for(var pair of formData.entries()) {
+                console.log(pair[0]+ ', '+ pair[1]);
+            }
             $(this).validate({
                 ignore: [],
                 rules: {
@@ -163,20 +189,20 @@
                     slug: 'required',
                     accept: "image/*",
                     description: 'required',
-                    'images[]': {
-                        required: true,
-                        extension: 'jpg,png,jpeg',
-                    }
+                    // 'images[]': {
+                    //     required: true,
+                    //     extension: 'jpg,png,jpeg',
+                    // }
                 },
                 messages: {
                     title: '<small class="text-danger">Title is required!</small>',
                     slug: '<small class="text-danger">Slug is required!</small>',
                     accept: '<small class="text-danger">File should be an image!</small>',
                     description: '<small class="text-danger">Description is required!</small>',
-                    'images[]': {
-                       required: '<small class="text-danger">Image is required!</small>',
-                       extension: '<small class="text-danger">Only jpg/png/jpeg file is allowed!</small>',
-                    }
+                    // 'images[]': {
+                    //    required: '<small class="text-danger">Image is required!</small>',
+                    //    extension: '<small class="text-danger">Only jpg/png/jpeg file is allowed!</small>',
+                    // }
                 }
             });
             if($(this).valid()){
@@ -204,6 +230,19 @@
                     },
                 });
             }
+        });
+
+        $("#blogs-table").on('click', '.edit-blog', function(ev){
+            ev.preventDefault();
+            var id = $(this).data('id');
+            $.ajax({
+                url: '{{ route('blogs.edit', 'id')}}',
+                type: 'get',
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')},
+                success: function(response){
+                    console.log(response);
+                }
+            })
         });
 
 

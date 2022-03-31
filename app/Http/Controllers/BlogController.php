@@ -33,7 +33,7 @@ class BlogController extends Controller
             return $getHtmlImg;
         })
         ->addColumn('action', function($blogs){
-            $getHtml = '<button class="btn edit-blog" data-id="'.$blogs->id.'">';
+            $getHtml = '<button class="btn edit-blog" data-toggle="modal" data-target="#addBlogModal" data-id="'.$blogs->id.'">';
             $getHtml .= '<i class="fas fa-edit"></i>';
             $getHtml .= '</button>';
             return $getHtml;
@@ -98,7 +98,16 @@ class BlogController extends Controller
      */
     public function edit($id)
     {
-        //
+        dd($id);
+        try {
+            $blog = Blog::find($id);
+            return response()->json($blog);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong',
+            ]);
+        }
     }
 
     /**

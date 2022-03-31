@@ -24,3 +24,4 @@
   <link rel="stylesheet" href="{{ asset('admins/plugins/summernote/summernote-bs4.min.css')}}">
   <!-- DataTables -->
   <link rel="stylesheet" href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css">
+

@@ -39,11 +39,12 @@ class BlogService {
 
     public function createBlog($request)
     {
+        $images = json_decode($request->file('images'));
         $blog = $request->all();
         $blog['created_by'] = auth()->user()->id;
         $blog = Blog::create($blog);
         if($request->hasfile('images')){
-            $this->uploadImage($blog, $request->file('images'));
+            $this->uploadImage($blog, $images);
         }
     }
 
