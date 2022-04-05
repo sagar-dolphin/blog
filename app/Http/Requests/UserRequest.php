@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 
 class UserRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class UserRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +22,19 @@ class UserRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
-        return [
-            //
-        ];
+        if(isset($request->user_id)){
+            return [
+                'name' => 'required',
+                'email' => 'required|email',
+            ];
+        }else{
+            return [
+                'name' => 'required',
+                'email' => 'required|email',
+                'password' => 'required'
+            ];
+        }
     }
 }

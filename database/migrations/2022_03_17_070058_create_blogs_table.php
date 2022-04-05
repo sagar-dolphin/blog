@@ -20,7 +20,7 @@ class CreateBlogsTable extends Migration
             $table->text('description');
             $table->boolean('status')->default('1');    
             $table->unsignedBigInteger('created_by');
-            $table->foreign('created_by')->references('id')->on('users');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

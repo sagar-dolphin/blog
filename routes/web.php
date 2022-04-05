@@ -37,11 +37,9 @@ Route::prefix('admin')->group(function(){
     Route::get('email/verify/{token}', [RegisterController::class, 'verifyAccount'])->name('user.verify');
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('admin.home');
-        Route::resource('users', UserController::class);
-        // Route::resource('users/edit', UserController::class);
-        
-        // Route::resource('blogs/store', BlogController::class);
-        Route::resource('blogs', BlogController::class);
+        Route::resource('users', UserController::class)->except(['update']);
+        Route::post('users/update/{id}', [UserController::class, 'update'])->name('users.update');
+        Route::resource('blogs', BlogController::class)->except(['update']);
+        Route::post('blogs/update/{id}', [BlogController::class, 'update'])->name('blogs.update');
     });    
 });
-// Route::resource('blogs', BlogController::class);

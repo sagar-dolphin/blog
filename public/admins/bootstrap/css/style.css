@@ -46,7 +46,7 @@ a {
     margin: 5rem;
 }
 
-#blogStatusMsg {
+#blogStatusMsg, #userStatusMsg {
     position: relative;
     left: 39rem;
     bottom: 2rem;

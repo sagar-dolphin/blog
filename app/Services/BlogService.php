@@ -39,7 +39,7 @@ class BlogService {
 
     public function createBlog($request)
     {
-        $images = json_decode($request->file('images'));
+        $images = $request->file('images');
         $blog = $request->all();
         $blog['created_by'] = auth()->user()->id;
         $blog = Blog::create($blog);
@@ -58,7 +58,21 @@ class BlogService {
             $blogImages->name = $name;
             $blogImages->original_name = $original_name;
             $blog->blogImages()->save($blogImages);
-        }
+        }    
         return 0;
+    }
+
+    public function updateBlog($request)
+    {
+        $images = $request->file('images');
+        $newBlog = $request->all();
+        $newBlog['created_by'] = auth()->user()->id;
+        $oldBlog = Blog::find($request->blog_id);
+        $oldBlog->update($newBlog);
+        $blog = Blog::find($request->blog_id);
+        if($request->hasfile('images')){
+            $blogImages = BlogImages::where('blog_id', $request->blog_id)->delete();
+            $this->uploadImage($blog, $images);
+        }
     }
 }

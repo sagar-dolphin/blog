@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\BlogRequest;
+use App\Http\Requests\EditBlogRequest;
 use App\Services\BlogService;
 use App\Models\Blog;
 use Yajra\DataTables\Facades\DataTables;
+
 
 class BlogController extends Controller
 {
@@ -20,7 +22,6 @@ class BlogController extends Controller
     {        
         if($request->ajax()){
         //    return $blogService->getDataTables();
-           // echo "sdfsdf111";exit;
         $blogs = Blog::with('BlogImages')->where('created_by', auth()->user()->id);   
         return DataTables::eloquent($blogs)
         ->addColumn('image', function($blogs){
@@ -33,8 +34,11 @@ class BlogController extends Controller
             return $getHtmlImg;
         })
         ->addColumn('action', function($blogs){
-            $getHtml = '<button class="btn edit-blog" data-toggle="modal" data-target="#addBlogModal" data-id="'.$blogs->id.'">';
+            $getHtml = '<button class="btn edit-blog" data-toggle="modal" data-target="#editBlogModal" data-id="'.$blogs->id.'">';
             $getHtml .= '<i class="fas fa-edit"></i>';
+            $getHtml .= '</button>';
+            $getHtml .= '<button class="btn delete-blog" data-id="'.$blogs->id.'">';
+            $getHtml .= '<i class="fas fa-trash"></i>';
             $getHtml .= '</button>';
             return $getHtml;
         })
@@ -62,6 +66,7 @@ class BlogController extends Controller
      */
     public function store(BlogRequest $request, BlogService $blogService)
     {   
+        
         try {
             if($request->ajax() && $request->validated()){
                 $blogService->createBlog($request);
@@ -76,9 +81,7 @@ class BlogController extends Controller
                 'message' => 'Something went wrong!'
             ]);
         }
-        
     }
-
     /**
      * Display the specified resource.
      *
@@ -98,9 +101,8 @@ class BlogController extends Controller
      */
     public function edit($id)
     {
-        dd($id);
         try {
-            $blog = Blog::find($id);
+            $blog = Blog::with('BlogImages')->where('id', $id)->get();
             return response()->json($blog);
         } catch (\Exception $e) {
             return response()->json([
@@ -117,9 +119,22 @@ class BlogController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(BlogRequest $request, BlogService $blogService, $id)
     {
-        //
+        try {
+            if($request->ajax() && $request->validated()){
+                $blogService->updateBlog($request);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Blog successfully created'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!'
+            ]);
+        }
     }
 
     /**
@@ -130,6 +145,19 @@ class BlogController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $blog = Blog::find($id);
+            $blog->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'Blog successfully deleted!',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong',
+            ]);
+        }
+        
     }
 }

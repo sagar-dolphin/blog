@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\BlogImages;
 
 class Blog extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'title',
@@ -31,6 +32,11 @@ class Blog extends Model
     public function getTitleAttribute($name)
     {
         return ucfirst($name);
+    }
+
+    public function getDescriptionAttribute($name)
+    {
+        return strip_tags($name);
     }
 
 }

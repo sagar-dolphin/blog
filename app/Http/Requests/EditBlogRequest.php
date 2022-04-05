@@ -3,10 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\BlogImages;
 use Illuminate\Http\Request;
 
-class BlogRequest extends FormRequest
+class EditBlogRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,11 +24,11 @@ class BlogRequest extends FormRequest
      */
     public function rules()
     {
-            return [
-                'title' => 'required',
-                'slug' => 'required',
-                'description' => 'required',
-                'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg'
-            ];
+        return [
+            'title' => 'required',
+            'slug' => 'required',
+            'description' => 'required',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg'
+        ];
     }
 }

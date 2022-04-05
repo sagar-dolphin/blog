@@ -39,9 +39,22 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        //
+        try {
+            if($request->ajax() && $request->validated()){
+                $user = User::create($request->all());
+                return response()->json([
+                    'success' => true,
+                    'message' => 'User successfully created!',
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Somethign went wrong!',
+            ]);
+        }
     }
 
     /**
@@ -61,14 +74,15 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, User $user)
+    public function edit(Request $request, $id)
     {
         if($request->ajax()){
             try {
-                return view('admin.users.create', ['user' => $user]);
+                $user = User::find($id);
+                return response()->json($user);
             } catch (\Exception $e) {
                 return response()->json([
-                    'status' => 'fail',
+                    'success' => false,
                     'message' => 'Something went wrong!',
                 ]);
             }
@@ -83,9 +97,23 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
-        //
+        try {
+            if($request->ajax() && $request->validated()){
+                $user = User::find($id);
+                $user->update($request->all());
+                return response()->json([
+                    'success' => true,
+                    'message' => 'User successfully created!',
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Somethign went wrong!',
+            ]);
+        }
     }
 
     /**
@@ -96,6 +124,18 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $user = User::find($id);
+            $user->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'User successfully deleted!',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong',
+            ]);
+        }
     }
 }
