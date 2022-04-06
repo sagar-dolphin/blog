@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\BlogRequest;
 use App\Http\Requests\EditBlogRequest;
+use App\Http\Requests\ImageRequest;
 use App\Services\BlogService;
 use App\Models\Blog;
 use Yajra\DataTables\Facades\DataTables;
@@ -22,7 +23,7 @@ class BlogController extends Controller
     {        
         if($request->ajax()){
         //    return $blogService->getDataTables();
-        $blogs = Blog::with('BlogImages')->where('created_by', auth()->user()->id);   
+        $blogs = Blog::with('BlogImages')->where('created_by', auth()->user()->id);  
         return DataTables::eloquent($blogs)
         ->addColumn('image', function($blogs){
             $blogs = $blogs->toArray();
@@ -43,6 +44,7 @@ class BlogController extends Controller
             return $getHtml;
         })
         ->rawColumns(['image', 'action'])
+        ->addIndexColumn()
         ->toJson();
         }
         return view('admin.blogs.index');
@@ -93,6 +95,11 @@ class BlogController extends Controller
         //
     }
 
+    public function uploadImage(Request $request)
+    {
+       
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -102,7 +109,8 @@ class BlogController extends Controller
     public function edit($id)
     {
         try {
-            $blog = Blog::with('BlogImages')->where('id', $id)->get();
+            // $blog = Blog::with('BlogImages')->where('id', $id)->first();
+            $blog = Blog::with('BlogImages')->find($id);
             return response()->json($blog);
         } catch (\Exception $e) {
             return response()->json([

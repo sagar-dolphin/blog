@@ -24,6 +24,18 @@ class Blog extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+
+    // public static function boot()
+    // {
+    //     parent::boot();
+
+    //     static::deleted(function ($model) {
+    //         $model->load(['blogs', 'blogImages',]);
+
+    //         $model->blogImages()->delete();
+    //         $model->blog()->delete();
+    //     });
+    // }
     public function blogImages()
     {
         return $this->hasMany(BlogImages::class);
@@ -39,4 +51,9 @@ class Blog extends Model
         return strip_tags($name);
     }
 
+    public function setTitleAttribute($value)
+    {
+        $this->attributes['title'] = $value;
+        $this->attributes['slug'] = str_slug($value);
+    }
 }

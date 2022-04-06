@@ -242,10 +242,6 @@
             $('li#' + id).remove();
             if (("li").length == 0) document.getElementById('products_uploaded').value = "";
         });
-
-        console.log(input_file);
-        console.log(remove_products_ids);
-        console.log(product_dynamic_id);
         $("form#multiple-files-upload").submit(function(e) {
             e.preventDefault();
             var formData = new FormData(this);

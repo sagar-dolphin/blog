@@ -16,7 +16,7 @@ class CreateBlogImagesTable extends Migration
         Schema::create('blog_images', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('blog_id');
-            $table->foreign('blog_id')->references('id')->on('blogs');
+            $table->foreign('blog_id')->references('id')->on('blogs')->onDelete('cascade');
             $table->string('name');
             $table->string('original_name');
             $table->timestamps();

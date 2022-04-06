@@ -87,7 +87,8 @@
                     </div> --}}
             </div>
             <div class="modal-footer">
-                <button type="button" id="closeEditUserFormBtn" class="btn btn-light" data-dismiss="modal">Close</button>
+                <button type="button" id="closeEditUserFormBtn" class="btn btn-light"
+                    data-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-light">Add</button>
             </div>
             </form>
@@ -98,7 +99,7 @@
 
 @push('scripts')
 <script>
-    function index() {
+    $(function() {
         $('#users-table').DataTable({
             processing: true,
             serverSide: true,
@@ -124,161 +125,161 @@
             searching: true,
             destroy: true
         });
-    }
-    index();
 
-    $(".addUserForm").on('submit', function(ev) {
-        ev.preventDefault();
-        var formData = new FormData(this);
-        $(this).validate({
-            ignore: [],
-            rules: {
-                name: 'required',
-                email: {
-                    email: true,
-                    required: true,
+        $(".addUserForm").on('submit', function(ev) {
+            ev.preventDefault();
+            var formData = new FormData(this);
+            $(this).validate({
+                ignore: [],
+                rules: {
+                    name: 'required',
+                    email: {
+                        email: true,
+                        required: true,
+                    },
+                    password: 'required',
                 },
-                password: 'required',
-            },
-            messages: {
-                name: '<small class="text-danger">Name is required!</small>',
-                email: {
-                    email: '<small class="text-danger">Invalid email!</small>',
-                    required: '<small class="text-danger">Email is required!</small>'
-                },
-                password: '<small class="text-danger">Password is required!</small>',
-            }
-        });
-
-        if ($(this).valid()) {
-            $.ajax({
-                url: '{{ route('users.store') }}',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')
-                },
-                type: 'post',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    if (response.success) {
-                        $(".addUserForm")[0].reset();
-
-                        $("#closeUserModelBtn").click();
-                        $("#userStatusMsg").text(response.message);
-                        setTimeout(() => {
-                            $("#userStatusMsg").text(response.message).show();
-                        }, 0);
-                        setTimeout(() => {
-                            $("#userStatusMsg").fadeOut();
-                        }, 3000);
-                        $("#userStatusMsg").addClass('alert alert-success');
-                        index();
-                    }
-                },
+                messages: {
+                    name: '<small class="text-danger">Name is required!</small>',
+                    email: {
+                        email: '<small class="text-danger">Invalid email!</small>',
+                        required: '<small class="text-danger">Email is required!</small>'
+                    },
+                    password: '<small class="text-danger">Password is required!</small>',
+                }
             });
-        }
-    });
 
-    $("#users-table").on('click', '.edit-user', function(ev) {
-        ev.preventDefault();
-        var id = $(this).data('id');
-        console.log(id);
-        var url = '{{ route('users.edit', ':id') }}';
-        url = url.replace(':id', id);
-        $.ajax({
-            url: url,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')
-            },
-            type: 'get',
-            success: function(data) {
-                console.log(data);
-                $("#user_id").val(data.id);
-                $("#editName").val(data.name);
-                $("#editEmail").val(data.email);
+            if ($(this).valid()) {
+                $.ajax({
+                    url: '{{ route('users.store') }}',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')
+                    },
+                    type: 'post',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if (response.success) {
+                            $(".addUserForm")[0].reset();
+
+                            $("#closeUserModelBtn").click();
+                            $("#userStatusMsg").text(response.message);
+                            setTimeout(() => {
+                                $("#userStatusMsg").text(response.message).show();
+                            }, 0);
+                            setTimeout(() => {
+                                $("#userStatusMsg").fadeOut();
+                            }, 3000);
+                            $("#userStatusMsg").addClass('alert alert-success');
+                            index();
+                        }
+                    },
+                });
             }
         });
 
-    });
-
-    $(".editUserForm").on('submit', function(ev) {
-        ev.preventDefault();
-        var formData = new FormData(this);
-        $(this).validate({
-            ignore: [],
-            rules: {
-                name: 'required',
-                email: {
-                    email: true,
-                    required: true,
-                },
-            },
-            messages: {
-                name: '<small class="text-danger">Name is required!</small>',
-                email: {
-                    email: '<small class="text-danger">Invalid email!</small>',
-                    required: '<small class="text-danger">Email is required!</small>'
-                },
-            }
-        });
-        if ($(this).valid()) {
-            var id = $("#user_id").val();
-            var url = '{{ route('users.update', ':id') }}';
+        $("#users-table").on('click', '.edit-user', function(ev) {
+            ev.preventDefault();
+            var id = $(this).data('id');
+            console.log(id);
+            var url = '{{ route('users.edit', ':id') }}';
             url = url.replace(':id', id);
             $.ajax({
                 url: url,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')
                 },
-                type: 'post',
-                data: formData,
-                contentType: false,
-                processData: false,
+                type: 'get',
+                success: function(data) {
+                    console.log(data);
+                    $("#user_id").val(data.id);
+                    $("#editName").val(data.name);
+                    $("#editEmail").val(data.email);
+                }
+            });
+
+        });
+
+        $(".editUserForm").on('submit', function(ev) {
+            ev.preventDefault();
+            var formData = new FormData(this);
+            $(this).validate({
+                ignore: [],
+                rules: {
+                    name: 'required',
+                    email: {
+                        email: true,
+                        required: true,
+                    },
+                },
+                messages: {
+                    name: '<small class="text-danger">Name is required!</small>',
+                    email: {
+                        email: '<small class="text-danger">Invalid email!</small>',
+                        required: '<small class="text-danger">Email is required!</small>'
+                    },
+                }
+            });
+            if ($(this).valid()) {
+                var id = $("#user_id").val();
+                var url = '{{ route('users.update', ':id') }}';
+                url = url.replace(':id', id);
+                $.ajax({
+                    url: url,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')
+                    },
+                    type: 'post',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if (response.success) {
+                            $(".editUserForm")[0].reset();
+
+                            $("#closeEditUserFormBtn").click();
+                            $("#userStatusMsg").text(response.message);
+                            setTimeout(() => {
+                                $("#userStatusMsg").text(response.message).show();
+                            }, 0);
+                            setTimeout(() => {
+                                $("#userStatusMsg").fadeOut();
+                            }, 3000);
+                            $("#userStatusMsg").addClass('alert alert-success');
+                            index();
+                        }
+                    },
+                });
+            }
+        });
+
+        $("table").on('click', '.delete-user', function(ev) {
+            ev.preventDefault();
+            var id = $(this).data('id');
+            var url = '{{ route('users.destroy', ':id') }}';
+            url = url.replace(':id', id);
+            $.ajax({
+                url: url,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')
+                },
+                type: 'delete',
                 success: function(response) {
                     if (response.success) {
-                        $(".editUserForm")[0].reset();
-
-                        $("#closeEditUserFormBtn").click();
-                        $("#userStatusMsg").text(response.message);
                         setTimeout(() => {
                             $("#userStatusMsg").text(response.message).show();
                         }, 0);
                         setTimeout(() => {
                             $("#userStatusMsg").fadeOut();
                         }, 3000);
-                        $("#userStatusMsg").addClass('alert alert-success');
+                        $("#userStatusMsg").addClass('alert alert-danger');
                         index();
                     }
-                },
+                }
             });
-        }
-    });
-
-    $("table").on('click', '.delete-user', function(ev){
-        ev.preventDefault();
-        var id = $(this).data('id');
-        var url = '{{ route('users.destroy', ':id') }}';
-        url = url.replace(':id', id);
-        $.ajax({
-            url: url,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')
-            },
-            type: 'delete',
-            success: function(response) {
-                if(response.success){
-                    setTimeout(() => {
-                      $("#userStatusMsg").text(response.message).show();
-                    }, 0);
-                    setTimeout(() => {
-                      $("#userStatusMsg").fadeOut();
-                    }, 3000);
-                    $("#userStatusMsg").addClass('alert alert-danger');
-                    index();
-                  }
-            }
         });
+
     });
 </script>
 @endpush

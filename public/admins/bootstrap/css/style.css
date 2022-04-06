@@ -68,7 +68,7 @@ a {
 
 table.dataTable {
     width: 95%;
-    border-radius: 40px;
+    border: 1px solid #fda1ff !important;
 }
 
 .dataTables_wrapper {
@@ -181,4 +181,9 @@ input[type="file"] {
   .remove:hover {
     background: transparent;
     color: black;
+  }
+
+  #blog-image-list {
+      display: flex;
+      list-style-type: none;
   }

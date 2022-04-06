@@ -41,5 +41,6 @@ Route::prefix('admin')->group(function(){
         Route::post('users/update/{id}', [UserController::class, 'update'])->name('users.update');
         Route::resource('blogs', BlogController::class)->except(['update']);
         Route::post('blogs/update/{id}', [BlogController::class, 'update'])->name('blogs.update');
+        Route::post('blogs/uploadImages', [BlogController::class, 'uploadImage'])->name('blogs.images.upload');
     });    
 });
