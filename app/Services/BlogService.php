@@ -36,9 +36,14 @@ class BlogService {
     }
 
     public function createBlog($request)
-    {
+    {    
+        $blog = $request->all();     
+        $removedImagesIds = array();
         $images = $request->file('images');
-        $blog = $request->all();
+        if(!empty($request->remove_image_ids)){
+            $removedImagesIds = explode(",", $request->remove_image_ids);
+            $images = array_diff_key($images, array_flip($removedImagesIds));
+        }        
         $blog['created_by'] = auth()->user()->id;
         $blog = Blog::create($blog);
         if($request->hasfile('images')){
@@ -47,16 +52,17 @@ class BlogService {
     }
 
     public function uploadImage($blog, $images)
-    {
-        foreach($images as $key => $image){
-            $original_name = $image->getClientOriginalName();
-            $name = date('YmdHi').$image->getClientOriginalName();
-            $image->move(public_path('images'), $name);
+    {        
+        foreach($images AS $key => $value){
+            $original_name = $value->getClientOriginalName();
+            $name = date('YmdHi').$value->getClientOriginalName();
+            $value->move(public_path('images'), $name);
             $blogImages = new BlogImages();
+            $blogImages->blog_id = $blog->id;
             $blogImages->name = $name;
             $blogImages->original_name = $original_name;
-            $blog->blogImages()->save($blogImages);
-        }    
+            $blogImages->save();
+        }
         return 0;
     }
 

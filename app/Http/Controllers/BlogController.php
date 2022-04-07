@@ -68,7 +68,6 @@ class BlogController extends Controller
      */
     public function store(BlogRequest $request, BlogService $blogService)
     {   
-        
         try {
             if($request->ajax() && $request->validated()){
                 $blogService->createBlog($request);

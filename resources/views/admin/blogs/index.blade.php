@@ -36,7 +36,7 @@
                     aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
             </div>
             <div class="modal-body">
-                <form class="addBlogForm" method="POST" enctype="multipart/form-data">
+                <form class="addBlogForm" id="addBlogForm" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
                         <label for="name" class="form-label">Title <b class="text-danger">*</b></label>
@@ -108,8 +108,8 @@
                         <label for="name" class="form-label">Images </label>
                         <input id="editImages" type="file" name="images[]" multiple>
                         <div id="editErrorImages"></div>
-                        <div id="preview_image">
-
+                        <div class=" text-center" id="edit_display_product_list">
+                            <ul id="edit-blog-image-list"></ul>
                         </div>
                     </div>
                     <div class="mb-3">
@@ -210,67 +210,34 @@
         //     console.log(images);
         // });
 
-        var input_file = document.getElementById('images')[0];
-        var remove_products_ids = [];
-        var product_dynamic_id = 0;
+        var input_file = document.getElementById('images');
+        var image_dynamic_id = 0;
+        var remove_image_ids = [];
         $("#images").change(function(e) {
+            remove_image_ids = [];
+            image_dynamic_id = 0;
             var len = e.target.files.length;
             $('#display_product_list ul').html("");
-
             for (var j = 0; j < len; j++) {
                 var src = "";
                 var name = event.target.files[j].name;
                 var mime_type = event.target.files[j].type.split("/");
                 if (mime_type[0] == "image") {
                     src = URL.createObjectURL(event.target.files[j]);
-                } else if (mime_type[0] == "video") {
-                    src = 'icons/video.png';
-                } else {
-                    src = 'icons/file.png';
                 }
-                $('#display_product_list ul').append("<li id='" + product_dynamic_id +
+                $('#display_product_list ul').append("<li id='" + image_dynamic_id +
                     "'><div class='ic-sing-file'><img class='imageThumb' id='" +
-                    product_dynamic_id + "' src='" + src +
-                    "' title='" + name + "'><p class='close' id='" + product_dynamic_id +
+                    image_dynamic_id + "' src='" + src +
+                    "' title='" + name + "'><p class='close' id='" + image_dynamic_id +
                     "'>X</p></div></li>");
-                product_dynamic_id++;
+                image_dynamic_id++;
             }
         });
         $(document).on('click', 'p.close', function() {
             var id = $(this).attr('id');
-            remove_products_ids.push(id);
+            remove_image_ids.push(id);
             $('li#' + id).remove();
             if (("li").length == 0) document.getElementById('products_uploaded').value = "";
-        });
-
-        console.log(input_file);
-        console.log(remove_products_ids);
-        console.log(product_dynamic_id);
-        $("form#multiple-files-upload").submit(function(e) {
-            e.preventDefault();
-            var formData = new FormData(this);
-            formData.append("remove_products_ids", remove_products_ids);
-            for (var pair of formData.entries()) {
-                console.log(pair[0] + ', ' + pair[1]);
-            }
-            $.ajax({
-                url: 'upload.php',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-
-                success: function(data) {
-                    $('#display_product_list ul').html(
-                        "<li class='text-success'>Files uploaded successfully!</li>");
-                    $('#products_uploaded').val("");
-                },
-                error: function(e) {
-                    $('#display_product_list ul').html(
-                        "<li class='text-danger'>Something wrong! Please try again.</li>"
-                    );
-                }
-            });
         });
 
         // Add Blog
@@ -278,6 +245,10 @@
             ev.preventDefault();
             console.log('submit clicked');
             var formData = new FormData(this);
+            formData.append("remove_image_ids", remove_image_ids);
+            for (var pair of formData.entries()) {
+                console.log(pair[0] + ', ' + pair[1]);
+            }
             $(this).validate({
                 ignore: [],
                 rules: {
@@ -322,7 +293,9 @@
                     processData: false,
                     success: function(response) {
                         if (response.success) {
-                            $(".addBlogForm")[0].reset();
+                            $("#addBlogForm")[0].reset();
+                            $("#blog-image-list").empty();
+                            CKEDITOR.instances.description.setData('');
                             $("#closeBlogModelBtn").click();
                             $("#blogStatusMsg").text(response.message);
                             setTimeout(() => {
@@ -388,6 +361,8 @@
                     success: function(response) {
                         if (response.success) {
                             $(".editBlogForm")[0].reset();
+                            $("#blog-image-list").empty();
+                            CKEDITOR.instances.description.setData('');
                             $("#closeEditBlogModelBtn").click();
                             $("#blogStatusMsg").text(response.message);
                             setTimeout(() => {
@@ -432,11 +407,49 @@
                     }
                     $("#preview-images").empty();
                     $(".pip").empty();
-                    $.each(response.blog_images, function(index, value) {
-                        imgs += '<img src="{{ asset('images') }}/' + value.name +
-                            '" width="50" height="50" class="img-rounded m-2" />';
-                    });
-                    $("#preview-images").append(imgs);
+                    // $.each(response.blog_images, function(index, value) {
+                    //     imgs += '<img src="{{ asset('images') }}/' + value.name +
+                    //         '" width="50" height="50" class="img-rounded m-2" />';
+                    // });
+                    // $("#preview-images").append(imgs);
+                    remove_image_ids = [];
+                    image_dynamic_id = 0;
+                    var len = response.blog_images.length;
+                    $('#edit_display_product_list ul').html("");
+                    for (var j = 0; j < len; j++) {
+                        var src = response.blog_images[j].name;
+                        var name = response.blog_images[j].name;
+                        $('#edit_display_product_list ul').append("<li id='" +
+                            image_dynamic_id +
+                            "'><div class='ic-sing-file'><img class='imageThumb' id='" +
+                            image_dynamic_id + "' src='{{ asset('images') }}/" + src +
+                            "' title='" + name + "'><p class='close' id='" +
+                            image_dynamic_id +
+                            "'>X</p></div></li>");
+                        image_dynamic_id++;
+                    }
+                    $("#editImages").on('change', function(e) {
+                            var len = e.target.files.length;
+                            for (var j = 0; j < len; j++) {
+                                var src = "";
+                                var name = event.target.files[j].name;
+                                var mime_type = event.target.files[j].type.split(
+                                    "/");
+                                if (mime_type[0] == "image") {
+                                    src = URL.createObjectURL(event.target.files[
+                                    j]);
+                                }
+                                $('#edit_display_product_list ul').append("<li id='" +
+                                    image_dynamic_id +
+                                    "'><div class='ic-sing-file'><img class='imageThumb' id='" +
+                                    image_dynamic_id + "' src='" + src +
+                                    "' title='" + name +
+                                    "'><p class='close' id='" +
+                                    image_dynamic_id +
+                                    "'>X</p></div></li>");
+                                image_dynamic_id++;
+                            }
+                        });
                 }
             });
         });

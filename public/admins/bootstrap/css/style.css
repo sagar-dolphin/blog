@@ -183,7 +183,8 @@ input[type="file"] {
     color: black;
   }
 
-  #blog-image-list {
+  #blog-image-list, #edit-blog-image-list {
       display: flex;
       list-style-type: none;
+      margin: 1rem -20px;
   }
