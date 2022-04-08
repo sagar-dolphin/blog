@@ -138,7 +138,8 @@
             processing: true,
             serverSide: true,
             ajax: '{{ route('blogs.index') }}',
-            columns: [{
+            columns: [
+                {
                     data: 'id',
                     name: 'id'
                 },
@@ -229,7 +230,7 @@
                     "'><div class='ic-sing-file'><img class='imageThumb' id='" +
                     image_dynamic_id + "' src='" + src +
                     "' title='" + name + "'><p class='close' id='" + image_dynamic_id +
-                    "'>X</p></div></li>");
+                    "'><i class='fa fa-times'></i></p></div></li>");
                 image_dynamic_id++;
             }
         });
@@ -357,13 +358,13 @@
                         $('#edit_display_product_list ul').append("<li id='" +
                             image_dynamic_id +
                             "'><div class='ic-sing-file'><img class='imageThumb' id='" +
-                            image_dynamic_id + "' src='{{ asset('images') }}/" + src +
+                            image_dynamic_id + "' src='{{ asset('admins/images') }}/" + src +
                             "' title='" + name + "'><p data-blog-id='" + response
                             .blog_images[j].blog_id + "' data-id='" + response
                             .blog_images[j].id + "' class='deleteImage' id='" +
                             image_dynamic_id +
-                            "'>X</p></div></li>");
-                        image_dynamic_id++;
+                            "'><i class='fa fa-times'></i></p></div></li>");
+                        image_dynamic_id++; 
                     }
                     $("#editImages").on('change', function(e) {
                         var len = e.target.files.length;
@@ -383,7 +384,7 @@
                                 "' title='" + name +
                                 "'><p class='close' id='" +
                                 image_dynamic_id +
-                                "'>X</p></div></li>");
+                                "'><i class='fa fa-times'></i></p></div></li>");
                             image_dynamic_id++;
                         }
                     });
@@ -399,9 +400,12 @@
             $.ajax({
                 url: '{{ route('blogs.removeImage') }}',
                 type: 'post',
-                data: {id: id, blog_id: blog_id},
-                success: function(response){
-                    
+                data: {
+                    id: id,
+                    blog_id: blog_id
+                },
+                success: function(response) {
+
                 }
             });
         });

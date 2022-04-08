@@ -57,7 +57,7 @@ class BlogService {
         foreach($images as $key => $value){
             $original_name = $value->getClientOriginalName();
             $name = date('YmdHi').$value->getClientOriginalName();
-            $value->move(public_path('images'), $name);
+            $value->move(public_path('admins/images'), $name);
             $blogImages = new BlogImages();
             $blogImages->blog_id = $blog->id;
             $blogImages->name = $name;

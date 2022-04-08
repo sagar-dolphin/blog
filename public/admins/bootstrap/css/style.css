@@ -158,8 +158,9 @@ input[type="file"] {
     display: block;
   }
   .imageThumb {
-    max-height: 75px;
-    border: 2px solid;
+    height: 60px;
+    width: 60px;
+    border-radius: 5px;
     padding: 1px;
     cursor: pointer;
   }
@@ -187,4 +188,22 @@ input[type="file"] {
       display: flex;
       list-style-type: none;
       margin: 1rem -20px;
+  }
+
+  .ic-sing-file {
+    position: relative;
+  }
+
+  #blog-image-list > li > div > p, #edit-blog-image-list > li > div > p{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+  }
+
+  #blog-image-list > li > div > img, #edit-blog-image-list > li > div > img {
+      margin-left: 5px;
+  }
+
+  #display_product_list, #edit_display_product_list  {
+      overflow: scroll;
   }

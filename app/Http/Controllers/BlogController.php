@@ -30,7 +30,7 @@ class BlogController extends Controller
             $blogs = $blogs->toArray();
             $getHtmlImg = '';
             for($i=0; $i<count($blogs['blog_images']); $i++){
-                $url= asset('images/'.$blogs['blog_images'][$i]['name']);
+                $url= asset('admins/images/'.$blogs['blog_images'][$i]['name']);
                 $getHtmlImg .= ' <img src="'.$url.'" border="0" width="40" class="img-rounded ml-2" align="center" /> ';
             }
             return $getHtmlImg;
@@ -44,8 +44,8 @@ class BlogController extends Controller
             $getHtml .= '</button>';
             return $getHtml;
         })
-        ->rawColumns(['image', 'action'])
         ->addIndexColumn()
+        ->rawColumns(['image', 'action'])
         ->toJson();
         }
         return view('admin.blogs.index');
@@ -125,7 +125,7 @@ class BlogController extends Controller
             try {
                 $matchThese = ['id' => $request->id, 'blog_id' => $request->blog_id];
                 $blogImage = BlogImages::where($matchThese)->first();
-                unlink("images/".$blogImage->name);
+                unlink("admins/images/".$blogImage->name);
                 $blogImage->delete();
                 return response()->json([
                     'success' => true,
@@ -175,6 +175,11 @@ class BlogController extends Controller
     {
         try {
             $blog = Blog::find($id);
+            $blogImages = BlogImages::where('blog_id', $blog->id)->get();
+            foreach ($blogImages as $blogImage) {
+                unlink("admins/images/".$blogImage->name);
+                $blogImage->delete();
+            }
             $blog->delete();
             return response()->json([
                 'success' => true,
