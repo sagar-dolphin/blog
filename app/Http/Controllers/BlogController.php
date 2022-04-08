@@ -7,6 +7,7 @@ use App\Http\Requests\BlogRequest;
 use App\Http\Requests\EditBlogRequest;
 use App\Http\Requests\ImageRequest;
 use App\Services\BlogService;
+use App\Models\BlogImages;
 use App\Models\Blog;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -108,7 +109,6 @@ class BlogController extends Controller
     public function edit($id)
     {
         try {
-            // $blog = Blog::with('BlogImages')->where('id', $id)->first();
             $blog = Blog::with('BlogImages')->find($id);
             return response()->json($blog);
         } catch (\Exception $e) {
@@ -116,6 +116,27 @@ class BlogController extends Controller
                 'success' => false,
                 'message' => 'Something went wrong',
             ]);
+        }
+    }
+
+    public function removeImage(Request $request)
+    {
+        if(isset($request->id, $request->blog_id)){
+            try {
+                $matchThese = ['id' => $request->id, 'blog_id' => $request->blog_id];
+                $blogImage = BlogImages::where($matchThese)->first();
+                unlink("images/".$blogImage->name);
+                $blogImage->delete();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Image Deleted Successfully!',
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Something went wrong',
+                ]);
+            }
         }
     }
 
@@ -127,7 +148,7 @@ class BlogController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(BlogRequest $request, BlogService $blogService, $id)
-    {
+    {        
         try {
             if($request->ajax() && $request->validated()){
                 $blogService->updateBlog($request);

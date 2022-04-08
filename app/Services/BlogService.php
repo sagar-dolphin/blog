@@ -14,6 +14,7 @@ use App\Models\BlogImages;
 class BlogService {
 
     public $request;
+    public $uploadedImages = [];
 
     public function __construct(BlogRequest $request)
     {        
@@ -40,10 +41,10 @@ class BlogService {
         $blog = $request->all();     
         $removedImagesIds = array();
         $images = $request->file('images');
-        if(!empty($request->remove_image_ids)){
+        if(isset($request->remove_image_ids)){
             $removedImagesIds = explode(",", $request->remove_image_ids);
             $images = array_diff_key($images, array_flip($removedImagesIds));
-        }        
+        }
         $blog['created_by'] = auth()->user()->id;
         $blog = Blog::create($blog);
         if($request->hasfile('images')){
@@ -52,8 +53,8 @@ class BlogService {
     }
 
     public function uploadImage($blog, $images)
-    {        
-        foreach($images AS $key => $value){
+    {                
+        foreach($images as $key => $value){
             $original_name = $value->getClientOriginalName();
             $name = date('YmdHi').$value->getClientOriginalName();
             $value->move(public_path('images'), $name);
@@ -67,16 +68,18 @@ class BlogService {
     }
 
     public function updateBlog($request)
-    {
+    {        
+        $blog = $request->all();     
+        $removedImagesIds = array();
         $images = $request->file('images');
-        $newBlog = $request->all();
-        $newBlog['created_by'] = auth()->user()->id;
-        $oldBlog = Blog::find($request->blog_id);
-        $oldBlog->update($newBlog);
-        $blog = Blog::find($request->blog_id);
-        if($request->hasfile('images')){
-            $blogImages = BlogImages::where('blog_id', $request->blog_id)->delete();
-            $this->uploadImage($blog, $images);
+        if(isset($request->remove_image_ids)){
+            $removedImagesIds = explode(",", $request->remove_image_ids);
+            $images = array_diff_key($images, array_flip($removedImagesIds));
+        }        
+        $oldBlog = Blog::find($request->blog_id);        
+        $oldBlog->update($blog);        
+        if($request->hasfile('images')){            
+            $this->uploadImage($oldBlog, $images);
         }
     }
 }

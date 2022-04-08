@@ -240,6 +240,12 @@
             if (("li").length == 0) document.getElementById('products_uploaded').value = "";
         });
 
+        $(document).on('click', 'p.deleteImage', function() {
+            var id = $(this).attr('id');
+            $('li#' + id).remove();
+            if (("li").length == 0) document.getElementById('products_uploaded').value = "";
+        });
+
         // Add Blog
         $("#addBlogModal").on('submit', '.addBlogForm', function(ev) {
             ev.preventDefault();
@@ -312,10 +318,99 @@
             }
         });
 
+        $("#blogs-table").on('click', '.edit-blog', function(ev) {
+            ev.preventDefault();
+            $(".addBlogForm")[0].reset();
+            var id = $(this).data('id');
+            var imgs = '';
+            var url = '{{ route('blogs.edit', ':id') }}';
+            url = url.replace(':id', id);
+            $("#addBlogModalTitle").text('Edit Blog');
+            $.ajax({
+                url: url,
+                type: 'get',
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')
+                },
+                success: function(response) {
+                    console.log("response:: ", response);
+                    $("#blog_id").val(response.id);
+                    $("#editTitle").val(response.title);
+                    $("#editSlug").val(response.slug);
+                    CKEDITOR.instances.editDescription.setData(response.description);
+                    if (response.status == 1) {
+                        $('#editStatus').prop('checked', true);
+                    } else {
+                        $('#editStatus').prop('checked', false);
+                    }
+                    $("#preview-images").empty();
+                    $(".pip").empty();
+
+                    remove_image_ids = [];
+                    image_dynamic_id = 0;
+                    var len = response.blog_images.length;
+                    $('#edit_display_product_list ul').html("");
+                    for (var j = 0; j < len; j++) {
+                        var src = response.blog_images[j].name;
+                        var name = response.blog_images[j].name;
+                        $('#edit_display_product_list ul').append("<li id='" +
+                            image_dynamic_id +
+                            "'><div class='ic-sing-file'><img class='imageThumb' id='" +
+                            image_dynamic_id + "' src='{{ asset('images') }}/" + src +
+                            "' title='" + name + "'><p data-blog-id='" + response
+                            .blog_images[j].blog_id + "' data-id='" + response
+                            .blog_images[j].id + "' class='deleteImage' id='" +
+                            image_dynamic_id +
+                            "'>X</p></div></li>");
+                        image_dynamic_id++;
+                    }
+                    $("#editImages").on('change', function(e) {
+                        var len = e.target.files.length;
+                        for (var j = 0; j < len; j++) {
+                            var src = "";
+                            var name = event.target.files[j].name;
+                            var mime_type = event.target.files[j].type.split(
+                                "/");
+                            if (mime_type[0] == "image") {
+                                src = URL.createObjectURL(event.target.files[
+                                    j]);
+                            }
+                            $('#edit_display_product_list ul').append("<li id='" +
+                                image_dynamic_id +
+                                "'><div class='ic-sing-file'><img class='imageThumb' id='" +
+                                image_dynamic_id + "' src='" + src +
+                                "' title='" + name +
+                                "'><p class='close' id='" +
+                                image_dynamic_id +
+                                "'>X</p></div></li>");
+                            image_dynamic_id++;
+                        }
+                    });
+                }
+            });
+        });
+
+        //Delete Multiple Images dynamically using ajax request
+        $(document).on('click', '.deleteImage', function(e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+            var blog_id = $(this).data('blog-id');
+            $.ajax({
+                url: '{{ route('blogs.removeImage') }}',
+                type: 'post',
+                data: {id: id, blog_id: blog_id},
+                success: function(response){
+                    
+                }
+            });
+        });
+
         // Update Blog
         $("#editBlogModal").on('submit', '.editBlogForm', function(ev) {
             ev.preventDefault();
             var formData = new FormData(this);
+            formData.append("remove_image_ids", remove_image_ids);
             $(this).validate({
                 ignore: [],
                 rules: {
@@ -377,81 +472,6 @@
                     },
                 });
             }
-        });
-
-        $("#blogs-table").on('click', '.edit-blog', function(ev) {
-            ev.preventDefault();
-            $(".addBlogForm")[0].reset();
-            var id = $(this).data('id');
-            var imgs = '';
-            var url = '{{ route('blogs.edit', ':id') }}';
-            url = url.replace(':id', id);
-            $("#addBlogModalTitle").text('Edit Blog');
-            $.ajax({
-                url: url,
-                type: 'get',
-                dataType: 'json',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')
-                },
-                success: function(response) {
-                    console.log("response:: ", response);
-                    $("#blog_id").val(response.id);
-                    $("#editTitle").val(response.title);
-                    $("#editSlug").val(response.slug);
-                    CKEDITOR.instances.editDescription.setData(response.description);
-                    if (response.status == 1) {
-                        $('#editStatus').prop('checked', true);
-                    } else {
-                        $('#editStatus').prop('checked', false);
-                    }
-                    $("#preview-images").empty();
-                    $(".pip").empty();
-                    // $.each(response.blog_images, function(index, value) {
-                    //     imgs += '<img src="{{ asset('images') }}/' + value.name +
-                    //         '" width="50" height="50" class="img-rounded m-2" />';
-                    // });
-                    // $("#preview-images").append(imgs);
-                    remove_image_ids = [];
-                    image_dynamic_id = 0;
-                    var len = response.blog_images.length;
-                    $('#edit_display_product_list ul').html("");
-                    for (var j = 0; j < len; j++) {
-                        var src = response.blog_images[j].name;
-                        var name = response.blog_images[j].name;
-                        $('#edit_display_product_list ul').append("<li id='" +
-                            image_dynamic_id +
-                            "'><div class='ic-sing-file'><img class='imageThumb' id='" +
-                            image_dynamic_id + "' src='{{ asset('images') }}/" + src +
-                            "' title='" + name + "'><p class='close' id='" +
-                            image_dynamic_id +
-                            "'>X</p></div></li>");
-                        image_dynamic_id++;
-                    }
-                    $("#editImages").on('change', function(e) {
-                            var len = e.target.files.length;
-                            for (var j = 0; j < len; j++) {
-                                var src = "";
-                                var name = event.target.files[j].name;
-                                var mime_type = event.target.files[j].type.split(
-                                    "/");
-                                if (mime_type[0] == "image") {
-                                    src = URL.createObjectURL(event.target.files[
-                                    j]);
-                                }
-                                $('#edit_display_product_list ul').append("<li id='" +
-                                    image_dynamic_id +
-                                    "'><div class='ic-sing-file'><img class='imageThumb' id='" +
-                                    image_dynamic_id + "' src='" + src +
-                                    "' title='" + name +
-                                    "'><p class='close' id='" +
-                                    image_dynamic_id +
-                                    "'>X</p></div></li>");
-                                image_dynamic_id++;
-                            }
-                        });
-                }
-            });
         });
 
         $("table").on('click', '.delete-blog', function(ev) {
