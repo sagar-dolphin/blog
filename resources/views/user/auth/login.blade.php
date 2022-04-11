@@ -12,7 +12,6 @@
           integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
           crossorigin="anonymous"/>
           @include('admin.layouts.includes.head')
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('admins/bootstrap/css/style.css')}}">
 
 </head>
@@ -38,7 +37,7 @@
       <div class="row">
         <form id="userLoginForm" action="{{ route('admin.login.post') }}" method="POST" class="shadow rounded bg-light p-5">
           @csrf
-          <h3 class="mb-2 text-center">Admin Login</h3>
+          <h3 class="mb-2 text-center">User Login</h3>
           <div class="mb-3">
             <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
             <input type="email" id="email" name="email" class="form-control" value="{{old('email')}}" placeholder="Email">
@@ -54,22 +53,12 @@
                 <small class="text-danger"><b>{{$errors->first('password')}}!</b></small>
             @endif
           </div>
-          <a href="{{ route('forget.password.get') }}"><u>I forgot my password</u></a><br>
+          {{-- <a href="{{ route('forget.password.get') }}"><u>I forgot my password</u></a><br> --}}
           <button type="submit" class="btn btn-primary registerBtn mt-2 mb-3">Submit</button><br>
-          <span class="ml-5 mt-2">New user? <a href="/admin/register" style="color:pink !important; font-weight:bold;">Sign Up</a></span>
+          <span class="ml-5 mt-2">New user? <a href="{{route('user.register')}}" style="color:pink !important; font-weight:bold;">Sign Up</a></span>
         </form>
       </div>
     </div>
-
-
-
-
-    <!-- jQuery -->
-    <script src="../../plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap 4 -->
-    <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="../../dist/js/adminlte.min.js"></script>
-
+    
     </body>
 </html>

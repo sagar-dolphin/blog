@@ -138,10 +138,16 @@
             processing: true,
             serverSide: true,
             ajax: '{{ route('blogs.index') }}',
-            columns: [
-                {
+            columns: [{
                     data: 'id',
-                    name: 'id'
+                    name: 'id',
+                    render: function(data, type, row, meta) {
+                        var pageinfo = table.page.info();
+                        var currentpage = (pageinfo.page) * pageinfo.length;
+                        var display_number = (meta.row + 1) + currentpage;
+                        return display_number;
+                    },
+                    searchable: false,
                 },
                 {
                     data: 'title',
@@ -174,42 +180,6 @@
             searching: true,
             destroy: true
         });
-
-        // $("#images").on("change", function(e) {
-        //     $(".pip").empty();
-        //     var files = e.target.files,
-        //         filesLength = files.length;
-        //     for (var i = 0; i < filesLength; i++) {
-        //         var f = files[i];
-        //         var fileReader = new FileReader();
-        //         fileReader.onload = (function(e) {
-        //             var file = e.target;
-        //             $("<span class=\"pip\">" +
-        //                 "<img class=\"imageThumb\" src=\"" + e.target.result +
-        //                 "\" title=\"" + file.name + "\"/>" +
-        //                 "<br/><span class=\"remove\">x</span>" +
-        //                 "</span>").insertAfter("#images");
-        //             $(".remove").click(function() {
-        //                 $(this).parent(".pip").remove();
-        //             });
-        //         });
-        //         fileReader.readAsDataURL(f);
-        //     }
-        //     $.ajax({
-        //         url: '{{ route('blogs.images.upload') }}',
-        //         type: 'post',
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')
-        //         },
-        //         data: {images: files},
-        //         contentType: false,
-        //         processData: false,
-        //         success: function(response) {
-        //             console.log(response);
-        //         }
-        //     });
-        //     console.log(images);
-        // });
 
         var input_file = document.getElementById('images');
         var image_dynamic_id = 0;
@@ -358,13 +328,14 @@
                         $('#edit_display_product_list ul').append("<li id='" +
                             image_dynamic_id +
                             "'><div class='ic-sing-file'><img class='imageThumb' id='" +
-                            image_dynamic_id + "' src='{{ asset('admins/images') }}/" + src +
+                            image_dynamic_id +
+                            "' src='{{ asset('admins/images') }}/" + src +
                             "' title='" + name + "'><p data-blog-id='" + response
                             .blog_images[j].blog_id + "' data-id='" + response
                             .blog_images[j].id + "' class='deleteImage' id='" +
                             image_dynamic_id +
                             "'><i class='fa fa-times'></i></p></div></li>");
-                        image_dynamic_id++; 
+                        image_dynamic_id++;
                     }
                     $("#editImages").on('change', function(e) {
                         var len = e.target.files.length;
@@ -514,7 +485,6 @@
                         });
                     }
                 });
-
         });
     });
 </script>

@@ -44,7 +44,6 @@ class BlogController extends Controller
             $getHtml .= '</button>';
             return $getHtml;
         })
-        ->addIndexColumn()
         ->rawColumns(['image', 'action'])
         ->toJson();
         }

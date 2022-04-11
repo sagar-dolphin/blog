@@ -12,12 +12,10 @@
           integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
           crossorigin="anonymous"/>
           @include('admin.layouts.includes.head')
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('admins/bootstrap/css/style.css')}}">
 
 </head>
 <body class="login-page" cz-shortcut-listen="true" style="min-height: 466px;">
-
 
 <div class=" d-flex justify-content-center">
   <div class="row">
@@ -27,7 +25,7 @@
     
     <form id="userRegisterForm" action="{{ route('admin.register') }}" method="POST" class="shadow rounded bg-light p-5">
       @csrf
-      <h3 class="mb-5 text-center">Admin Registration</h3>
+      <h3 class="mb-5 text-center">Register Your Self</h3>
       <div class="mb-3">
         <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
         <input type="text" id="name" name="name" class="form-control" value="{{old('name')}}" placeholder="Name">
@@ -58,18 +56,13 @@
         @endif
       </div>
       <button type="submit" class="btn btn-primary registerBtn">Submit</button><br>
-      <span>Already registered? <a href="/admin/login" style="color:pink !important; font-weight:bold;">Login</a></span>  
+      <span>Already registered? <a href="{{route('user.login')}}" style="color:pink !important; font-weight:bold;">Login</a></span>  
     </form>
   </div>
 </div>
-    
 
-    <!-- jQuery -->
-    <script src="../../plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap 4 -->
-    <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="../../dist/js/adminlte.min.js"></script>
+    <script>
 
+    </script>
     </body>
 </html>
