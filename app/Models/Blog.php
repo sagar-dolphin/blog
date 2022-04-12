@@ -56,4 +56,5 @@ class Blog extends Model
         $this->attributes['title'] = $value;
         $this->attributes['slug'] = str_slug($value);
     }
+
 }

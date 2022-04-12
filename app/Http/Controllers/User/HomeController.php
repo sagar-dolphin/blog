@@ -55,8 +55,8 @@ class HomeController extends Controller
     public function show($id)
     {
         $id = decrypt($id);
-        $blog = Blog::find($id);
-        return view('user.blog', ['blog' => $blog]);
+        $blog = Blog::with('BlogImages')->find($id);
+        return view('user.blog', ['blogData' => $blog]);
     }
 
     /**

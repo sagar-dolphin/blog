@@ -22,11 +22,6 @@ use App\Http\Controllers\User\HomeController;
 */
 
 Route::get('/', [App\Http\Controllers\User\HomeController::class, 'index'])->name('user.home');
-Route::get('register', [App\Http\Controllers\User\Auth\RegisterController::class, 'showRegisterForm'])->name('user.register');
-Route::post('register', [App\Http\Controllers\User\Auth\RegisterController::class, 'register']);
-Route::get('login', [App\Http\Controllers\User\Auth\LoginController::class, 'showLoginForm'])->name('user.login');
-Route::post('login', [App\Http\Controllers\User\Auth\LoginController::class, 'login']);
-Route::get('logout', [App\Http\Controllers\User\Auth\LoginController::class, 'logout']);
 Route::get('blog/{id}', [App\Http\Controllers\User\HomeController::class, 'show'])->name('user.show');
 Route::get('about', function(){
     return view('user.about');

@@ -37,7 +37,6 @@
                   @endif
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button><br>
-                <span>Already registered? <a href="{{route('user.login')}}" style="color:pink !important; font-weight:bold;">Login</a></span>  
               </form>
         </div>
     </div>
