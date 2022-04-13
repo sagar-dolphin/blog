@@ -1,9 +1,9 @@
   <!-- Footer -->
     <footer>
         <div class="container">
-            <div class="row">
+            <div class="row justify-content-center">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <ul class="list-inline text-center">
+                    <ul class="list-inline text-center justify-content-center d-flex">
                         <li>
                             <a href="#">
                                 <span class="fa-stack fa-lg">
@@ -39,8 +39,11 @@
     <script src="{{ asset('user/vendor/jquery/jquery.min.js') }}"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="{{ asset('user/vendor/bootstrap/js/bootstrap.min.js') }}"></script>
-
+    {{-- <script src="{{ asset('user/vendor/bootstrap/js/bootstrap.min.js') }}"></script> --}}
+    {{-- Popper js --}}
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    {{-- Bootstrap.min js --}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
     <!-- Contact Form JavaScript -->
     <script src="{{ asset('user/js/jqBootstrapValidation.js') }}"></script>
     <script src="{{ asset('user/js/contact_me.js') }}"></script>
@@ -49,3 +52,7 @@
     <script src="{{ asset('user/js/clean-blog.min.js') }}"></script>
     @section('footer')
         @show
+
+
+        
+        

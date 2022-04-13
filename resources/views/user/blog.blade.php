@@ -17,8 +17,9 @@
 
     <!-- Main Content-->
     <div class="container">
-        <div class="row">
+        <div class="row justify-content-center">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h2 class="mt-3">{{$blogData->title}}</h2>
                 <!-- Post preview-->
                 <div class="post-preview">
                     <p>

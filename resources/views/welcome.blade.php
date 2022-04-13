@@ -9,7 +9,12 @@
         }
 
         #blogImage {
-            border-radius: 20px;
+            width: 100%;
+            height: 15vw;
+            object-fit: cover;
+            padding: 19px;
+            border-top-left-radius: 35px !important;
+            border-bottom-left-radius: 35px !important;
         }
 
     </style>
@@ -21,7 +26,7 @@
 
     <!-- Main Content-->
     <div class="container">
-        <div class="row">
+        <div class="row justify-content-center">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <!-- Post preview-->
                 @foreach ($blogs as $blog)
@@ -29,7 +34,7 @@
                         <div class="row g-0">
                             <div class="col-md-4">
                                 <img id="blogImage" src="{{ asset('admins/images/' . $blog->blogImages[0]->name) }}"
-                                    height="230" width="230" class="img-fluid rounded-start" alt="not found">
+                                    class="rounded-start" alt="not found">
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
@@ -50,7 +55,7 @@
                     </div>
 
                     <!-- Divider-->
-                    <hr class="my-4">
+                    {{-- <hr class="my-4"> --}}
                 @endforeach
 
             </div>
