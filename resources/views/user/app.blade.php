@@ -14,6 +14,8 @@
 
    @include('user.layouts.footer')
 
+
+   @stack('scripts')
 </body>
 
 </html>

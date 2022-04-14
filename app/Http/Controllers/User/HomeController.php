@@ -15,11 +15,18 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $blogs = Blog::with('BlogImages')->get();
-            return view('welcome', ['blogs' => $blogs]);
+            $blogs = Blog::with('blogImage')->simplePaginate(1);
+            $pageIndex = [];
+            if($request->ajax()){
+                $pageIndex = ['previous' => $request->page - 1, 'next' => $request->page + 1];
+                $blogsHtml = view('user.blogItems', ['blogs' => $blogs])->render();
+                return response()->json(['html'=>$blogsHtml, 'pageIndex' => $pageIndex]);
+            }else{
+                return view('welcome', ['blogs' => $blogs]);
+            }
         } catch (\Exception $e) {
             return redirect()->back();
         }

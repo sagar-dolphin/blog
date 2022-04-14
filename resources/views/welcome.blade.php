@@ -17,6 +17,12 @@
             border-bottom-left-radius: 35px !important;
         }
 
+        #blogItems>nav {
+            position: relative;
+            left: 30rem;
+            top: 1rem;
+        }
+
     </style>
 @endsection
 @section('title', 'Welcome')
@@ -27,41 +33,31 @@
     <!-- Main Content-->
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div id="blogItems" class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <!-- Post preview-->
-                @foreach ($blogs as $blog)
-                    <div id="cardBlog" class="card mb-3" style="max-width: 540px;">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                <img id="blogImage" src="{{ asset('admins/images/' . $blog->blogImages[0]->name) }}"
-                                    class="rounded-start" alt="not found">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <a href="{{ route('user.show', encrypt($blog->id)) }}" class="card-title">
-                                        <h3>{{ $blog->title }}</h3>
-                                    </a>
-                                    <p class="card-text">{{ str_limit(strip_tags($blog->description), 90) }}
-                                        @if (strlen(strip_tags($blog->description)) > 90)
-                                            <a href="{{ route('user.show', encrypt($blog->id)) }}"
-                                                class="btn-sm">Read More</a>
-                                        @endif
-                                    </p>
-                                    <p class="card-text"><small class="text-muted">Created at
-                                            {{ $blog->created_at->toDateString() }}</small></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div id="renderBlogItems">
+                    @include('user.blogItems', ['blogs' => $blogs])
+                </div>
 
-                    <!-- Divider-->
-                    {{-- <hr class="my-4"> --}}
-                @endforeach
-
+                {{ $blogs->links() }}
             </div>
         </div>
     </div>
 @endsection
 
-@section('footer')
-@endsection
+@push('scripts')
+    <script>
+        $('#blogItems>nav>a').on('click', function(e) {
+            e.preventDefault();
+            var current = $(this);
+            var url = $(this).attr('href');
+            baseUrl = url.slice(0, -1);
+            $.get(url, function(data) {
+                if (data != '') {
+                    current.attr(baseUrl+data.previous);
+                    $("#renderBlogItems").html(data.html);
+                }
+            });
+        });
+    </script>
+@endpush

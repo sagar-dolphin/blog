@@ -41,6 +41,11 @@ class Blog extends Model
         return $this->hasMany(BlogImages::class);
     }
 
+    public function blogImage()
+    {
+        return $this->hasOne(BlogImages::class);
+    }
+
     public function getTitleAttribute($name)
     {
         return ucfirst($name);
